@@ -8,14 +8,21 @@
 
       <!-- 登录表单 -->
       <div>
-        <el-form class="login_form">
+        <el-form :model="loginForm" class="login_form">
           <!-- 用户名 -->
           <el-form-item>
-            <el-input></el-input>
+            <el-input
+              v-model="loginForm.username"
+              prefix-icon="el-icon-user-solid"
+            ></el-input>
           </el-form-item>
           <!-- 密码 -->
           <el-form-item>
-            <el-input></el-input>
+            <el-input
+              v-model="loginForm.password"
+              prefix-icon="el-icon-lock"
+              type="password"
+            ></el-input>
           </el-form-item>
           <!-- 按钮区域 -->
           <el-form-item class="btns">
@@ -29,7 +36,16 @@
 </template>
 
 <script>
-export default {};
+export default {
+  data() {
+    return {
+      loginForm: {
+        username: "",
+        password: "",
+      },
+    };
+  },
+};
 </script>
 
 <style lang="less" scoped>
@@ -69,12 +85,12 @@ export default {};
     display: flex;
     justify-content: flex-end;
   }
-  .login_form{
+  .login_form {
     display: block;
-    position:absolute;
-    bottom:0;
-    box-sizing:border-box;
-    width:100%;
+    position: absolute;
+    bottom: 0;
+    box-sizing: border-box;
+    width: 100%;
     padding: 0 20px;
   }
 }
