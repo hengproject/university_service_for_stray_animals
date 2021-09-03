@@ -8,7 +8,12 @@
 
       <!-- 登录表单 -->
       <div>
-        <el-form ref="loginFormRef" :model="loginForm" :rules="loginFormRules" class="login_form">
+        <el-form
+          ref="loginFormRef"
+          :model="loginForm"
+          :rules="loginFormRules"
+          class="login_form"
+        >
           <!-- 用户名 -->
           <el-form-item prop="username">
             <el-input
@@ -40,33 +45,38 @@ export default {
   data() {
     return {
       loginForm: {
-        username: "",
-        password: "",
+        username: "ysh0",
+        password: "200108",
       },
-      loginFormRules:{
+      loginFormRules: {
         //验证用户名是否合法
-        username:[
+        username: [
           { required: true, message: "请输入用户名称", trigger: "blur" },
           { min: 4, max: 30, message: "长度在4-30之间", trigger: "blur" },
         ],
         password: [
           { required: true, message: "请输入密码", trigger: "blur" },
-          { min: 6, max: 30, message: "长度在6-30之间", trigger: "blur" },]
-      }
+          { min: 6, max: 30, message: "长度在6-30之间", trigger: "blur" },
+        ],
+      },
     };
   },
-  methods:{
-    resetLoginForm(){
+  methods: {
+    resetLoginForm() {
       this.$refs.loginFormRef.resetFields();
     },
-    login(){
-      this.$refs.loginFormRef.validate(async valid =>{
-        if(!valid) return;
-        const { data:res } = await this.$http.post('/login',this.loginForm);
-        console.log(res);
-      })
-    }
-  }
+    login() {
+      this.$refs.loginFormRef.validate(async (valid) => {
+        if (!valid) return;
+        const { data: resp } = await this.$http.post("/login", this.loginForm);
+        console.log(resp);
+        if (resp.code !== 200) return this.$message.error("登录失败");
+        this.$message.success("登录成功");
+        window.sessionStorage.setItem("token", resp.data.token);
+        this.$router.push("/home");
+      });
+    },
+  },
 };
 </script>
 
@@ -75,6 +85,7 @@ export default {
   background-color: #2b4b6b;
   height: 100%;
 }
+
 .login_box {
   width: 450px;
   height: 300px;
@@ -84,6 +95,7 @@ export default {
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
+
   .avator_box {
     box-sizing: border-box;
     height: 130px;
@@ -96,6 +108,7 @@ export default {
     left: 50%;
     transform: translate(-50%, -70%);
     background-color: #fff;
+
     img {
       width: 100%;
       height: 100%;
@@ -103,10 +116,12 @@ export default {
       background-color: #eee;
     }
   }
+
   .btns {
     display: flex;
     justify-content: flex-end;
   }
+
   .login_form {
     display: block;
     position: absolute;
