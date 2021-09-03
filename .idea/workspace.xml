@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="0010b299-e861-4724-a73c-e34d1a117907" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/frontEnd/frontend/node_modules/.cache/babel-loader/6709f20de6d8c80eb1f6d944046c326a.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontEnd/frontend/node_modules/.cache/babel-loader/6709f20de6d8c80eb1f6d944046c326a.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontEnd/frontend/node_modules/.cache/babel-loader/6ea95d66fe59395e6342f08294de2928.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontEnd/frontend/node_modules/.cache/babel-loader/6ea95d66fe59395e6342f08294de2928.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontEnd/frontend/node_modules/.cache/vue-loader/2a9b00a49eab37b94797b644fd989f80.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontEnd/frontend/node_modules/.cache/vue-loader/2a9b00a49eab37b94797b644fd989f80.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontEnd/frontend/node_modules/.cache/vue-loader/534e9035241c03b17c26803413271c35.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontEnd/frontend/node_modules/.cache/vue-loader/534e9035241c03b17c26803413271c35.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontEnd/frontend/node_modules/.cache/vue-loader/6bc637d609b56fe2a9f9c7952b715a20.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontEnd/frontend/node_modules/.cache/vue-loader/6bc637d609b56fe2a9f9c7952b715a20.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontEnd/frontend/node_modules/.cache/vue-loader/9930e158755214a49a101644e42cd9bf.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontEnd/frontend/node_modules/.cache/vue-loader/9930e158755214a49a101644e42cd9bf.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontEnd/frontend/node_modules/.cache/vue-loader/f5d277ef2b304ab7a9e04991eb4e2d79.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontEnd/frontend/node_modules/.cache/vue-loader/f5d277ef2b304ab7a9e04991eb4e2d79.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontEnd/frontend/node_modules/.package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontEnd/frontend/node_modules/.package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontEnd/frontend/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontEnd/frontend/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontEnd/frontend/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontEnd/frontend/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontEnd/frontend/src/components/Login.vue" beforeDir="false" afterPath="$PROJECT_DIR$/frontEnd/frontend/src/components/Login.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontEnd/frontend/src/main.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontEnd/frontend/src/main.js" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectId" id="1xbjbO2gGmD8j2WFCJ4YS6GZQRl" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="0010b299-e861-4724-a73c-e34d1a117907" name="Changes" comment="" />
+      <created>1630630752860</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1630630752860</updated>
+      <workItem from="1630630754253" duration="305000" />
+    </task>
+    <servers />
+  </component>
+</project>

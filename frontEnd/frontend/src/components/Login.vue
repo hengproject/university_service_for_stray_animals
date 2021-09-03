@@ -8,16 +8,16 @@
 
       <!-- 登录表单 -->
       <div>
-        <el-form :model="loginForm" class="login_form">
+        <el-form ref="loginFormRef" :model="loginForm" :rules="loginFormRules" class="login_form">
           <!-- 用户名 -->
-          <el-form-item>
+          <el-form-item prop="username">
             <el-input
               v-model="loginForm.username"
               prefix-icon="el-icon-user-solid"
             ></el-input>
           </el-form-item>
           <!-- 密码 -->
-          <el-form-item>
+          <el-form-item prop="password">
             <el-input
               v-model="loginForm.password"
               prefix-icon="el-icon-lock"
@@ -26,8 +26,8 @@
           </el-form-item>
           <!-- 按钮区域 -->
           <el-form-item class="btns">
-            <el-button type="primary">登录</el-button>
-            <el-button type="info">重置</el-button>
+            <el-button type="primary" @click="login">登录</el-button>
+            <el-button type="info" @click="resetLoginForm">重置</el-button>
           </el-form-item>
         </el-form>
       </div>
@@ -43,8 +43,30 @@ export default {
         username: "",
         password: "",
       },
+      loginFormRules:{
+        //验证用户名是否合法
+        username:[
+          { required: true, message: "请输入用户名称", trigger: "blur" },
+          { min: 4, max: 30, message: "长度在4-30之间", trigger: "blur" },
+        ],
+        password: [
+          { required: true, message: "请输入密码", trigger: "blur" },
+          { min: 6, max: 30, message: "长度在6-30之间", trigger: "blur" },]
+      }
     };
   },
+  methods:{
+    resetLoginForm(){
+      this.$refs.loginFormRef.resetFields();
+    },
+    login(){
+      this.$refs.loginFormRef.validate(async valid =>{
+        if(!valid) return;
+        const { data:res } = await this.$http.post('/login',this.loginForm);
+        console.log(res);
+      })
+    }
+  }
 };
 </script>
 
