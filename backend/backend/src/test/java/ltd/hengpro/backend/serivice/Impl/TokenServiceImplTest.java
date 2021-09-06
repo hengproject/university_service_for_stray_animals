@@ -21,7 +21,7 @@ class TokenServiceImplTest {
 
     @Test
     void getToken() {
-        UserDto userDto = new UserDto("1", "2", UserGroupEnum.NORMAL_USER, SpecialIdentityEnum.NORMAL_USER);
+        UserDto userDto = new UserDto("1", "2", UserGroupEnum.NORMAL_USER, SpecialIdentityEnum.NORMAL_USER,"1");
         String token = tokenService.getToken(userDto);
         System.out.println(token);
         token = tokenService.getToken(userDto);
@@ -31,7 +31,7 @@ class TokenServiceImplTest {
 
 
 
-        UserDto userDto2 = new UserDto("1", "2", UserGroupEnum.NORMAL_USER, SpecialIdentityEnum.NORMAL_USER);
+        UserDto userDto2 = new UserDto("1", "2", UserGroupEnum.NORMAL_USER, SpecialIdentityEnum.NORMAL_USER,"1");
         token = tokenService.getToken(userDto2);
         System.out.println(token);
         System.out.println(userDto);
@@ -42,7 +42,7 @@ class TokenServiceImplTest {
     @Test
     void verify() {
         String uuid="3f1e9e3c0e794786abc69f928dd1fa02";
-        UserDto userDto = new UserDto("1", "2", UserGroupEnum.NORMAL_USER, SpecialIdentityEnum.NORMAL_USER);
+        UserDto userDto = new UserDto("1", "2", UserGroupEnum.NORMAL_USER, SpecialIdentityEnum.NORMAL_USER,"1");
         System.out.println(userDto);
         boolean verify = tokenService.verify(uuid, userDto);
         System.out.println(verify);

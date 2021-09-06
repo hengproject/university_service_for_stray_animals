@@ -42,9 +42,13 @@ public class StaffInfo implements Serializable
     private Date updateTime;
 
     /** 工作人员身份 */
-    private String staffIdentity;
+    private Integer staffIdentity;
 
     /** 备注 */
     private String staffRemark;
+
+    private String userId;
+
+    private String staffName;
 
 }

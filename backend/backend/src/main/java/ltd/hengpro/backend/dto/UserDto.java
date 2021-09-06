@@ -3,7 +3,9 @@ package ltd.hengpro.backend.dto;
 import ltd.hengpro.backend.enums.SpecialIdentityEnum;
 import ltd.hengpro.backend.enums.UserGroupEnum;
 
-public class UserDto {
+import java.io.Serializable;
+
+public class UserDto implements Serializable {
     public String userId;
 
     public String username;
@@ -14,11 +16,22 @@ public class UserDto {
 
     public String token;
 
-    public UserDto(String userId, String username, UserGroupEnum userGroupEnum,SpecialIdentityEnum specialIdentityEnum) {
+    public String staffId;
+
+    public String getStaffId() {
+        return staffId;
+    }
+
+    public void setStaffId(String staffId) {
+        this.staffId = staffId;
+    }
+
+    public UserDto(String userId, String username, UserGroupEnum userGroupEnum, SpecialIdentityEnum specialIdentityEnum, String staffId) {
         this.userId = userId;
         this.username = username;
         this.userGroupEnum = userGroupEnum;
         this.specialIdentityEnum=specialIdentityEnum;
+        this.staffId=staffId;
     }
 
     public String getUserId() {
@@ -80,6 +93,9 @@ public class UserDto {
         final Object other$specialIdentityEnum = other.getSpecialIdentityEnum();
         if (this$specialIdentityEnum == null ? other$specialIdentityEnum != null : !this$specialIdentityEnum.equals(other$specialIdentityEnum))
             return false;
+        final Object this$staffId = this.getStaffId();
+        final Object other$staffId = other.getStaffId();
+        if (this$staffId == null ? other$staffId != null : !this$staffId.equals(other$staffId)) return false;
         return true;
     }
 
@@ -98,10 +114,12 @@ public class UserDto {
         result = result * PRIME + ($userGroupEnum == null ? 43 : $userGroupEnum.hashCode());
         final Object $specialIdentityEnum = this.getSpecialIdentityEnum();
         result = result * PRIME + ($specialIdentityEnum == null ? 43 : $specialIdentityEnum.hashCode());
+        final Object $staffId = this.getStaffId();
+        result = result * PRIME + ($staffId == null ? 43 : $staffId.hashCode());
         return result;
     }
 
     public String toString() {
-        return "UserDto(userId=" + this.getUserId() + ", username=" + this.getUsername() + ", userGroupEnum=" + this.getUserGroupEnum() + ", specialIdentityEnum=" + this.getSpecialIdentityEnum() + ", token=" + this.getToken() + ")";
+        return "UserDto(userId=" + this.getUserId() + ", username=" + this.getUsername() + ", userGroupEnum=" + this.getUserGroupEnum() + ", specialIdentityEnum=" + this.getSpecialIdentityEnum() + ", token=" + this.getToken() + ", staffId=" + this.getStaffId() + ")";
     }
 }

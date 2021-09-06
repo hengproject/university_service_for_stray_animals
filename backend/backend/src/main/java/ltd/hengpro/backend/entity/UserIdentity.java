@@ -25,4 +25,6 @@ public class UserIdentity implements Serializable
     /** 用户特殊身份 */
     private Integer specialIdentity;
 
+    private String staffId;
+
 }

@@ -6,4 +6,6 @@ public interface TokenService {
     String getToken(UserDto userDto);
 
     boolean verify(String UUID,UserDto userDto);
+
+    UserDto getUserDtoFromUUID(String uuid);
 }

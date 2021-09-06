@@ -1,6 +1,7 @@
 package ltd.hengpro.backend.vo;
 
 import lombok.Data;
+import ltd.hengpro.backend.entity.UserLogin;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -17,4 +18,11 @@ public class UserLoginVo implements Serializable
     /** 用户密码 */
     private String password;
 
+    public UserLoginVo() {
+    }
+
+    public UserLoginVo(UserLogin userLogin) {
+        this.username = userLogin.getUsername();
+        this.password = userLogin.getPassword();
+    }
 }

@@ -20,21 +20,21 @@ public class StaffStatistics implements Serializable
     private String staffId;
 
     /** 工作人员总登录天数 */
-    private String totalLogn;
+    private String totalLogin;
 
     /** 工作人员本月登录天数 */
-    private String thismonthLogn;
+    private String thisMonthLogin;
 
     /** 工作人员上月登录天数 */
-    private String lastmonthLogn;
+    private String lastMonthLogin;
 
     /** 工作人员本周登录天数 */
-    private String thisweekLogn;
+    private String thisWeekLogin;
 
     /** 工作人员上周登录天数 */
-    private String lastweekLogn;
+    private String lastWeekLogin;
 
     /** 工作人员最近登录天数 */
-    private String latestLogn;
+    private String latestLogin;
 
 }

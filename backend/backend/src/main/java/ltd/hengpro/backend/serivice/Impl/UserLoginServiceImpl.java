@@ -28,6 +28,7 @@ public class UserLoginServiceImpl implements UserLoginService {
         UserLogin userLogin = userLoginDao.findUserLoginByUsernameAndPassword(userLoginVo.getUsername(), userLoginVo.getPassword());
         if(ObjectUtils.isEmpty(userLogin)) return null;
         UserIdentity userIdentity = userIdentityDao.findByUserId(userLogin.getUserId());
-        return new UserDto(userLogin.getUserId(),userLogin.getUsername(), EnumUtil.getByCode(userIdentity.getGroup(),UserGroupEnum.class),EnumUtil.getByCode(userIdentity.getSpecialIdentity(), SpecialIdentityEnum.class));
+        UserDto userDto = new UserDto(userLogin.getUserId(), userLogin.getUsername(), EnumUtil.getByCode(userIdentity.getGroup(), UserGroupEnum.class), EnumUtil.getByCode(userIdentity.getSpecialIdentity(), SpecialIdentityEnum.class), userIdentity.getStaffId());
+        return userDto;
     }
 }

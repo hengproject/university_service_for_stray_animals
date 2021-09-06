@@ -8,6 +8,8 @@
 
 #### 前端项目技术栈
 
+- javascript
+- node.js
 - Vue2.0
 - Vue-router
 - Element-UI
