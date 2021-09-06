@@ -13,11 +13,13 @@ public class SuperUserInfoDto implements Serializable {
     StaffDto staffDto;
     UserDto userDto;
     UserLogin userLogin;
+    boolean online;
 
-    public SuperUserInfoDto(StaffDto staffDto, UserDto userDto, UserLogin userLogin) {
+    public SuperUserInfoDto(StaffDto staffDto, UserDto userDto, UserLogin userLogin, boolean online) {
         this.staffDto = staffDto;
         this.userDto = userDto;
         this.userLogin = userLogin;
+        this.online = online;
     }
 
     public SuperUserInfoDto() {

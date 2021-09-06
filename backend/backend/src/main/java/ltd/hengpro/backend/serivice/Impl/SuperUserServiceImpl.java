@@ -32,6 +32,9 @@ public class SuperUserServiceImpl implements SuperUserService {
     @Autowired
     StaffInfoService staffInfoService;
 
+    @Autowired
+    TokenServiceImpl tokenService;
+
 
 
     @Override
@@ -45,7 +48,8 @@ public class SuperUserServiceImpl implements SuperUserService {
         for(UserLogin userLogin : userLoginList){
             UserDto userDto = userLoginService.login(new UserLoginVo(userLogin));
             StaffDto staffDto = staffInfoService.getStuffDtoByUserID(userLogin.getUserId());
-            superUserInfoDtoList.add(new SuperUserInfoDto(staffDto,userDto,userLogin));
+            boolean online = tokenService.online(userLogin);
+            superUserInfoDtoList.add(new SuperUserInfoDto(staffDto,userDto,userLogin,online));
 
         }
         return superUserInfoDtoList;

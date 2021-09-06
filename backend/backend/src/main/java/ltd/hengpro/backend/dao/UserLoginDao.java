@@ -15,4 +15,6 @@ public interface UserLoginDao extends JpaRepository<UserLogin,String> {
 
     Page<UserLogin> findAll(Pageable pageable);
 
+//    UserLogin findUserLoginByUsername(String username);
+
 }

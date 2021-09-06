@@ -21,7 +21,8 @@
         </el-col>
       </el-row>
       <el-table :data="userList" border stripe>
-        <el-table-column label="#" type="index" align="center"> </el-table-column>
+        <el-table-column label="#" type="index" align="center">
+        </el-table-column>
 
         <el-table-column label="用户管理" align="center">
           <el-table-column
@@ -61,8 +62,43 @@
           ></el-table-column>
         </el-table-column>
         <el-table-column label="具体操作" align="center">
-          <el-table-column label="状态"></el-table-column>
-          <el-table-column label="操作"></el-table-column>
+          <el-table-column label="在线状态">
+            <template slot-scope="scope">
+              <el-switch v-model="scope.row.online"></el-switch>
+            </template>
+          </el-table-column>
+          <el-table-column label="操作">
+            <template slot-scope="">
+              <el-button-group>
+                <el-tooltip
+                  class="item"
+                  effect="dark"
+                  content="修改用户信息"
+                  placement="top"
+                  :enterable="false"
+                >
+                  <el-button
+                    type="primary"
+                    icon="el-icon-edit"
+                    size="mini"
+                  ></el-button
+                ></el-tooltip>
+                <el-tooltip
+                  class="item"
+                  effect="dark"
+                  content="删除该用户(包括员工信息)"
+                  placement="top"
+                  :enterable="false"
+                >
+                  <el-button
+                    type="danger"
+                    icon="el-icon-delete"
+                    size="mini"
+                  ></el-button
+                ></el-tooltip>
+              </el-button-group>
+            </template>
+          </el-table-column>
         </el-table-column>
       </el-table>
     </el-card>
