@@ -1,17 +1,20 @@
 package ltd.hengpro.backend.serivice.Impl;
 
+import ltd.hengpro.backend.dao.SiteStatisticsDao;
 import ltd.hengpro.backend.dao.StaffDao;
 import ltd.hengpro.backend.dao.UserIdentityDao;
 import ltd.hengpro.backend.dao.UserLoginDao;
 import ltd.hengpro.backend.dto.StaffDto;
 import ltd.hengpro.backend.dto.SuperUserInfoDto;
 import ltd.hengpro.backend.dto.UserDto;
+import ltd.hengpro.backend.entity.SiteStatistics;
 import ltd.hengpro.backend.entity.StaffInfo;
 import ltd.hengpro.backend.entity.UserIdentity;
 import ltd.hengpro.backend.entity.UserLogin;
 import ltd.hengpro.backend.serivice.StaffInfoService;
 import ltd.hengpro.backend.serivice.SuperUserService;
 import ltd.hengpro.backend.serivice.UserLoginService;
+import ltd.hengpro.backend.serivice.WebSiteStatisticsService;
 import ltd.hengpro.backend.vo.UserLoginVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -37,6 +40,7 @@ public class SuperUserServiceImpl implements SuperUserService {
 
 
 
+
     @Override
     public List<SuperUserInfoDto> superUserGetUserList(Pageable pageable) throws Exception {
         List<SuperUserInfoDto> superUserInfoDtoList = new ArrayList<>();
@@ -54,4 +58,13 @@ public class SuperUserServiceImpl implements SuperUserService {
         }
         return superUserInfoDtoList;
     }
+
+    public void loginOrLogout(UserDto userDto,boolean login){
+        if (login){
+            tokenService.login(userDto);
+        }else {
+            tokenService.logout(userDto);
+        }
+    }
+
 }

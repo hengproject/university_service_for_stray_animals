@@ -47,4 +47,9 @@ class TokenServiceImplTest {
         boolean verify = tokenService.verify(uuid, userDto);
         System.out.println(verify);
     }
+
+//    @Test
+//    void online(){
+//        tokenService.online
+//    }
 }
