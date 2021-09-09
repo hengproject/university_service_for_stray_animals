@@ -26,8 +26,7 @@ class UserIdentityDaoTest {
     @Test
     @Transactional
     void register(){
-        UserIdentity userIdentity = userIdentityDao.findByUserId("1");
-        userIdentity.setUserId("5");
+        UserIdentity userIdentity = new UserIdentity("5", 0, 0, "5");
         UserIdentity userIdentity1 = userIdentityDao.saveAndFlush(userIdentity);
         System.out.println(userIdentity1);
     }

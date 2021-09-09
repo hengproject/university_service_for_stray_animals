@@ -20,7 +20,7 @@ public class UserIdentity implements Serializable
     private String userId;
 
     /** 用户分组 */
-    private Integer group;
+    private Integer userGroup;
 
 
     /** 用户特殊身份 */
@@ -28,9 +28,9 @@ public class UserIdentity implements Serializable
 
     private String staffId;
 
-    public UserIdentity(String userId, Integer group, Integer specialIdentity, String staffId) {
+    public UserIdentity(String userId, Integer userGroup, Integer specialIdentity, String staffId) {
         this.userId = userId;
-        this.group = group;
+        this.userGroup = userGroup;
         this.specialIdentity = specialIdentity;
         this.staffId = staffId;
     }

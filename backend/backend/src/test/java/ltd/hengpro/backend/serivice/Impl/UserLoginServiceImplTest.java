@@ -23,8 +23,8 @@ class UserLoginServiceImplTest {
     @Test
     void login() throws Exception {
         UserLoginVo userLoginVo = new UserLoginVo();
-        userLoginVo.setUsername("ysh");
-        userLoginVo.setPassword("123456789");
+        userLoginVo.setUsername("ysh0");
+        userLoginVo.setPassword("200108");
         UserDto login = userLoginService.login(userLoginVo);
         System.out.println(login);
     }
