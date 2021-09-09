@@ -79,6 +79,7 @@ public class SuperUserController {
         if(!validate(addUserForm)) return JSON.toJSONString(new ResultVo<Object>(400,"信息填写不完全,请重新填写",null));
         if(!registerValidate(addUserForm)) return JSON.toJSONString(new ResultVo<Object>(403,"用户名重复，添加失败",null));
 
+        superUserService.registerUser(addUserForm);
         return JSON.toJSONString(new ResultVo<Object>(200,"success",null));
     }
 

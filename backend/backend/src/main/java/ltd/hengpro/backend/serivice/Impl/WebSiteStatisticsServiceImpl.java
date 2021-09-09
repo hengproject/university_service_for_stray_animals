@@ -1,6 +1,7 @@
 package ltd.hengpro.backend.serivice.Impl;
 
 import ltd.hengpro.backend.dao.SiteStatisticsDao;
+import ltd.hengpro.backend.entity.SiteStatistics;
 import ltd.hengpro.backend.serivice.WebSiteStatisticsService;
 import ltd.hengpro.backend.vo.SiteStatisticsVo;
 import org.springframework.beans.BeanUtils;
@@ -22,5 +23,13 @@ public class WebSiteStatisticsServiceImpl implements WebSiteStatisticsService {
         SiteStatisticsVo siteStatisticsVo = new SiteStatisticsVo();
         BeanUtils.copyProperties(siteStatisticsDao.findById(1).get(),siteStatisticsVo);
         return siteStatisticsVo;
+    }
+
+    @Override
+    public void increaseUserNum() {
+        SiteStatistics byId = siteStatisticsDao.getById(1);
+        long l = byId.getUserNum() + 1;
+        byId.setUserNum(l);
+        siteStatisticsDao.saveAndFlush(byId);
     }
 }

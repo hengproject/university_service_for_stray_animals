@@ -182,7 +182,7 @@ export default {
       queryString: "",
       userList: [],
       total: 0,
-      addDialogVisible: true,
+      addDialogVisible: false,
       // 添加用户的表单类型
       addForm: {
         username: "",
@@ -199,6 +199,10 @@ export default {
         password: [
           { required: true, message: "请输入密码", trigger: "blur" },
           { min: 6, max: 30, message: "长度在6-30之间", trigger: "blur" },
+        ],
+        staffName: [
+          { required: true, message: "请输入操作员姓名", trigger: "blur" },
+          { min: 2, max: 30, message: "长度在6-30之间", trigger: "blur" },
         ],
       },
     };
@@ -250,24 +254,35 @@ export default {
     handleDialogClose() {
       this.addDialogVisible = false;
     },
-    addFormSubmit() {
-      console.log(this.addForm);
-      this.$http.post("/superuser_add_user",this.addForm);
+    async addFormSubmit() {
+      const { data: resp } = await this.$http.post(
+        "/superuser_add_user",
+        this.addForm
+      );
+      if (resp.code === 403 || resp.code === 401) {
+        this.$message.error(resp.data.msg);
+        return this.logout();
+      }
+      if (resp.code !== 200) return this.$message.error(resp.data.msg);
+      if (resp.code === 200) {
+        this.$message.success("添加成功");
+        this.clearAddForm();
+      }
       this.addDialogVisible = false;
     },
-    closeAddForm(){
+    closeAddForm() {
       this.clearAddForm();
       this.addDialogVisible = false;
     },
-    clearAddForm(){
-      this.addForm={
+    clearAddForm() {
+      this.addForm = {
         username: "",
         password: "",
         userGroup: "",
         staffName: "",
         staffIdentity: "",
       };
-    }
+    },
   },
 };
 </script>

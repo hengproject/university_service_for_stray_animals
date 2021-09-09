@@ -14,7 +14,6 @@ public class UserIdentityServiceImpl implements UserIdentityService {
 
     public UserIdentity register(UserIdentity userIdentity){
         return userIdentityDao.saveAndFlush(userIdentity);
-
     }
 
 }

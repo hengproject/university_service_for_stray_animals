@@ -5,7 +5,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public interface StaffDao extends JpaRepository<StaffInfo,String> {
+public interface StaffInfoDao extends JpaRepository<StaffInfo,String> {
     StaffInfo findByUserId(String userId);
-
 }

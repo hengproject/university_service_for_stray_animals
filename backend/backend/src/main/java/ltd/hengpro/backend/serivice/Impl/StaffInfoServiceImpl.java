@@ -1,6 +1,6 @@
 package ltd.hengpro.backend.serivice.Impl;
 
-import ltd.hengpro.backend.dao.StaffDao;
+import ltd.hengpro.backend.dao.StaffInfoDao;
 import ltd.hengpro.backend.dto.StaffDto;
 import ltd.hengpro.backend.entity.StaffInfo;
 import ltd.hengpro.backend.enums.ExceptionEnum;
@@ -16,15 +16,19 @@ import org.springframework.util.ObjectUtils;
 @Service
 public class StaffInfoServiceImpl implements StaffInfoService {
     @Autowired
-    StaffDao staffDao;
+    StaffInfoDao staffInfoDao;
 
     @Override
     public StaffDto getStuffDtoByUserID(String userId) throws Exception {
         StaffDto staffDto = new StaffDto();
-        StaffInfo staffInfo = staffDao.findByUserId(userId);
+        StaffInfo staffInfo = staffInfoDao.findByUserId(userId);
         if(ObjectUtils.isEmpty(staffInfo)) throw new UserAuthException(ExceptionEnum.USERID_TO_STAFF_NOT_FOUND);
         BeanUtils.copyProperties(staffInfo,staffDto);
         staffDto.setStaffIdentityEnum(EnumUtil.getByCode(staffInfo.getStaffIdentity(),StaffIdentityEnum.class));
         return staffDto;
+    }
+
+    public StaffInfo register(StaffInfo staffInfo){
+        return staffInfoDao.saveAndFlush(staffInfo);
     }
 }

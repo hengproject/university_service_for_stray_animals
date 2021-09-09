@@ -4,12 +4,14 @@ import ltd.hengpro.backend.dao.UserLoginDao;
 import ltd.hengpro.backend.dto.StaffDto;
 import ltd.hengpro.backend.dto.SuperUserInfoDto;
 import ltd.hengpro.backend.dto.UserDto;
+import ltd.hengpro.backend.entity.StaffInfo;
+import ltd.hengpro.backend.entity.UserIdentity;
 import ltd.hengpro.backend.entity.UserLogin;
+import ltd.hengpro.backend.enums.StaffIdentityEnum;
+import ltd.hengpro.backend.enums.UserGroupEnum;
 import ltd.hengpro.backend.form.superuser.AddUserForm;
-import ltd.hengpro.backend.serivice.StaffInfoService;
-import ltd.hengpro.backend.serivice.SuperUserService;
-import ltd.hengpro.backend.serivice.UserLoginService;
-import ltd.hengpro.backend.serivice.WebSiteStatisticsService;
+import ltd.hengpro.backend.serivice.*;
+import ltd.hengpro.backend.utils.UUIDUtil;
 import ltd.hengpro.backend.vo.UserLoginVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -17,6 +19,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -28,12 +31,16 @@ public class SuperUserServiceImpl implements SuperUserService {
     UserLoginService userLoginService;
 
     @Autowired
+    UserIdentityService userIdentityService;
+
+    @Autowired
     StaffInfoService staffInfoService;
 
     @Autowired
     TokenServiceImpl tokenService;
 
-
+    @Autowired
+    WebSiteStatisticsService webSiteStatisticsService;
 
 
     @Override
@@ -89,6 +96,13 @@ public class SuperUserServiceImpl implements SuperUserService {
     public void registerUser(AddUserForm addUserForm){
         UserLoginVo userLoginVo = new UserLoginVo(addUserForm.getUsername(), addUserForm.getPassword());
         String userId = userLoginService.register(userLoginVo);
+        String staffId=UUIDUtil.getUUID();
+        StaffInfo staffInfo = new StaffInfo(staffId, "0", "20", new Date(), new Date(), StaffIdentityEnum.valueOf(addUserForm.getStaffIdentity()).getCode(), "", userId, addUserForm.getStaffName());
+        staffInfoService.register(staffInfo);
+        UserIdentity userIdentity = new UserIdentity(userId, UserGroupEnum.valueOf(addUserForm.getUserGroup()).getCode(), 0, staffId);
+        userIdentityService.register(userIdentity);
+
+        webSiteStatisticsService.increaseUserNum();
     }
 
 }

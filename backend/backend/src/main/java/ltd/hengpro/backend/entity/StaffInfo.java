@@ -31,12 +31,10 @@ public class StaffInfo implements Serializable
 
     /**  创建时间 */
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "create_time")
     @CreationTimestamp
     private Date createTime;
 
     /** 修改时间 */
-    @Column(name = "update_time")
     @UpdateTimestamp
     @Temporal(TemporalType.TIMESTAMP)
     private Date updateTime;
@@ -51,4 +49,18 @@ public class StaffInfo implements Serializable
 
     private String staffName;
 
+    public StaffInfo() {
+    }
+
+    public StaffInfo(String staffId, String staffSex, String staffAge, Date createTime, Date updateTime, Integer staffIdentity, String staffRemark, String userId, String staffName) {
+        this.staffId = staffId;
+        this.staffSex = staffSex;
+        this.staffAge = staffAge;
+        this.createTime = createTime;
+        this.updateTime = updateTime;
+        this.staffIdentity = staffIdentity;
+        this.staffRemark = staffRemark;
+        this.userId = userId;
+        this.staffName = staffName;
+    }
 }

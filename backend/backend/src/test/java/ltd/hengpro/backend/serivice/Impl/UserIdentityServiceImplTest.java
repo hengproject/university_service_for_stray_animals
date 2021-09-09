@@ -21,7 +21,7 @@ class UserIdentityServiceImplTest {
     @Test
     @Transactional
     void register() {
-        UserIdentity userIdentity = new UserIdentity();
+        UserIdentity userIdentity = new UserIdentity("5",1,1,"5");
         userIdentity.setUserId("5");
         System.out.println(userIdentityService.register(userIdentity));
     }
