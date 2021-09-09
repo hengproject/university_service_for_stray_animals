@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import javax.transaction.Transactional;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 @RunWith(SpringRunner.class)
@@ -17,8 +19,16 @@ class UserIdentityDaoTest {
 
     @Test
     void findByUserId() {
-        UserIdentity byUserId = userIdentityDao.findByUserId("1");
-        System.out.println(byUserId);
+        UserIdentity userIdentity = userIdentityDao.findByUserId("1");
+        System.out.println(userIdentity);
 
+    }
+    @Test
+    @Transactional
+    void register(){
+        UserIdentity userIdentity = userIdentityDao.findByUserId("1");
+        userIdentity.setUserId("5");
+        UserIdentity userIdentity1 = userIdentityDao.saveAndFlush(userIdentity);
+        System.out.println(userIdentity1);
     }
 }

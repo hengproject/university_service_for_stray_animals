@@ -1,16 +1,11 @@
 package ltd.hengpro.backend.serivice.Impl;
 
-import ltd.hengpro.backend.dao.SiteStatisticsDao;
-import ltd.hengpro.backend.dao.StaffDao;
-import ltd.hengpro.backend.dao.UserIdentityDao;
 import ltd.hengpro.backend.dao.UserLoginDao;
 import ltd.hengpro.backend.dto.StaffDto;
 import ltd.hengpro.backend.dto.SuperUserInfoDto;
 import ltd.hengpro.backend.dto.UserDto;
-import ltd.hengpro.backend.entity.SiteStatistics;
-import ltd.hengpro.backend.entity.StaffInfo;
-import ltd.hengpro.backend.entity.UserIdentity;
 import ltd.hengpro.backend.entity.UserLogin;
+import ltd.hengpro.backend.form.superuser.AddUserForm;
 import ltd.hengpro.backend.serivice.StaffInfoService;
 import ltd.hengpro.backend.serivice.SuperUserService;
 import ltd.hengpro.backend.serivice.UserLoginService;
@@ -46,9 +41,41 @@ public class SuperUserServiceImpl implements SuperUserService {
         List<SuperUserInfoDto> superUserInfoDtoList = new ArrayList<>();
 
         Page<UserLogin> all = userLoginDao.findAll(pageable);
+        return getSuperUserInfoDtos(superUserInfoDtoList, all);
+    }
+
+
+
+
+    @Override
+    public List<SuperUserInfoDto> superUserGetUserListLike(Pageable pageable,String usernameLike) throws Exception {
+        List<SuperUserInfoDto> superUserInfoDtoList = new ArrayList<>();
+
+        Page<UserLogin> userLoginByUsernameLike = userLoginDao.findUserLoginByUsernameLike(usernameLike, pageable);
+        return getSuperUserInfoDtos(superUserInfoDtoList, userLoginByUsernameLike);
+    }
+
+    @Override
+    public Long countSuperUserGetUserListLike(String usernameLike) {
+        return userLoginDao.countByUsernameLike(usernameLike);
+    }
+
+
+    public void loginOrLogout(UserDto userDto,boolean login){
+        if (login){
+            tokenService.login(userDto);
+        }else {
+            tokenService.logout(userDto);
+        }
+    }
+
+    public boolean containsUser(String username){
+        return userLoginService.containUser(username);
+    }
+
+    private List<SuperUserInfoDto> getSuperUserInfoDtos(List<SuperUserInfoDto> superUserInfoDtoList, Page<UserLogin> all) throws Exception {
         List<UserLogin> userLoginList = all.getContent();
 
-        System.out.println(userLoginList.size());
         for(UserLogin userLogin : userLoginList){
             UserDto userDto = userLoginService.login(new UserLoginVo(userLogin));
             StaffDto staffDto = staffInfoService.getStuffDtoByUserID(userLogin.getUserId());
@@ -59,12 +86,9 @@ public class SuperUserServiceImpl implements SuperUserService {
         return superUserInfoDtoList;
     }
 
-    public void loginOrLogout(UserDto userDto,boolean login){
-        if (login){
-            tokenService.login(userDto);
-        }else {
-            tokenService.logout(userDto);
-        }
+    public void registerUser(AddUserForm addUserForm){
+        UserLoginVo userLoginVo = new UserLoginVo(addUserForm.getUsername(), addUserForm.getPassword());
+        String userId = userLoginService.register(userLoginVo);
     }
 
 }

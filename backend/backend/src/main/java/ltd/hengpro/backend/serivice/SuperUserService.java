@@ -8,5 +8,12 @@ import java.util.List;
 
 public interface SuperUserService {
     List<SuperUserInfoDto> superUserGetUserList(Pageable pageable) throws Exception;
+
     void loginOrLogout(UserDto userDto, boolean login);
+
+    List<SuperUserInfoDto> superUserGetUserListLike(Pageable pageable,String usernameLike) throws Exception;
+
+    Long countSuperUserGetUserListLike(String usernameLike);
+
+    boolean containsUser(String username);
 }

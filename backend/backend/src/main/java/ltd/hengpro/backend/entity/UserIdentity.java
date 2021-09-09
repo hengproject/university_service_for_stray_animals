@@ -7,7 +7,7 @@ import javax.persistence.Id;
 import java.io.Serializable;
 
 /**
- * 用户权限JavaBean --> 对应user_root
+ * 用户权限JavaBean --> 对应user_identity
  */
 @Entity
 @Data
@@ -22,9 +22,19 @@ public class UserIdentity implements Serializable
     /** 用户分组 */
     private Integer group;
 
+
     /** 用户特殊身份 */
     private Integer specialIdentity;
 
     private String staffId;
 
+    public UserIdentity(String userId, Integer group, Integer specialIdentity, String staffId) {
+        this.userId = userId;
+        this.group = group;
+        this.specialIdentity = specialIdentity;
+        this.staffId = staffId;
+    }
+
+    public UserIdentity() {
+    }
 }

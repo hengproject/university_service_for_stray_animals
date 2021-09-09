@@ -10,6 +10,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.stereotype.Service;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import javax.transaction.Transactional;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
@@ -25,5 +27,18 @@ class UserLoginServiceImplTest {
         userLoginVo.setPassword("123456789");
         UserDto login = userLoginService.login(userLoginVo);
         System.out.println(login);
+    }
+    @Test
+    @Transactional
+    void register(){
+        UserLoginVo userLoginVo = new UserLoginVo("ysh666", "133133133");
+        String register = userLoginService.register(userLoginVo);
+        System.out.println(register);
+    }
+
+    @Test
+    void containsUser(){
+        boolean ysh = userLoginService.containUser("ysh");
+        System.out.println(ysh);
     }
 }

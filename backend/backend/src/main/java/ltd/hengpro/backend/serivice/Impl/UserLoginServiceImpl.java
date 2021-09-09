@@ -10,6 +10,7 @@ import ltd.hengpro.backend.enums.SpecialIdentityEnum;
 import ltd.hengpro.backend.enums.UserGroupEnum;
 import ltd.hengpro.backend.serivice.UserLoginService;
 import ltd.hengpro.backend.utils.EnumUtil;
+import ltd.hengpro.backend.utils.UUIDUtil;
 import ltd.hengpro.backend.vo.UserLoginVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -30,5 +31,18 @@ public class UserLoginServiceImpl implements UserLoginService {
         UserIdentity userIdentity = userIdentityDao.findByUserId(userLogin.getUserId());
         UserDto userDto = new UserDto(userLogin.getUserId(), userLogin.getUsername(), EnumUtil.getByCode(userIdentity.getGroup(), UserGroupEnum.class), EnumUtil.getByCode(userIdentity.getSpecialIdentity(), SpecialIdentityEnum.class), userIdentity.getStaffId());
         return userDto;
+    }
+
+    public String register(UserLoginVo userLoginVo){
+        String uuid = UUIDUtil.getUUID();
+        UserLogin userLogin = new UserLogin(uuid, userLoginVo.getUsername(), userLoginVo.getPassword());
+        userLoginDao.saveAndFlush(userLogin);
+
+        return uuid;
+    }
+
+    public boolean containUser(String username){
+        UserLogin userLoginByUsername = userLoginDao.findUserLoginByUsername(username);
+        return !ObjectUtils.isEmpty(userLoginByUsername);
     }
 }

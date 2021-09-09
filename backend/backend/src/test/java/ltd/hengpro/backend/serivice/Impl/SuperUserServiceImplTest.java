@@ -3,6 +3,7 @@ package ltd.hengpro.backend.serivice.Impl;
 import ltd.hengpro.backend.converter.UserLogin2UserDto;
 import ltd.hengpro.backend.dto.SuperUserInfoDto;
 import ltd.hengpro.backend.entity.UserLogin;
+import ltd.hengpro.backend.enums.UserGroupEnum;
 import ltd.hengpro.backend.serivice.SuperUserService;
 import ltd.hengpro.backend.serivice.TokenService;
 import ltd.hengpro.backend.vo.UserLoginVo;
@@ -45,5 +46,11 @@ class SuperUserServiceImplTest {
         superUserService.loginOrLogout(userLogin2UserDto.convert(userLoginVo),true);
         List<SuperUserInfoDto> superUserInfoDtos = superUserService.superUserGetUserList(PageRequest.of(0, 2));
         System.out.println(superUserInfoDtos);
+    }
+
+    @Test
+    void EnumTest(){
+        System.out.println( UserGroupEnum.valueOf("SUPER_USER").getCode());
+
     }
 }

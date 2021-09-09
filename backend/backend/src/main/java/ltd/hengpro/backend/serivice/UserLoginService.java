@@ -7,4 +7,9 @@ import ltd.hengpro.backend.vo.UserLoginVo;
 
 public interface UserLoginService {
     UserDto login(UserLoginVo userLoginVo) throws Exception;
+
+    //返回UUID
+    String register(UserLoginVo userLoginVo);
+
+    boolean containUser(String username);
 }

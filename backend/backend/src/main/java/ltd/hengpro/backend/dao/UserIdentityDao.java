@@ -7,4 +7,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface UserIdentityDao extends JpaRepository<UserIdentity,String> {
 
     UserIdentity findByUserId(String userID);
+
 }

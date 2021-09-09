@@ -25,4 +25,12 @@ public class UserLogin implements Serializable
     /** 用户密码 */
     private String password;
 
+    public UserLogin() {
+    }
+
+    public UserLogin(String userId, String username, String password) {
+        this.userId = userId;
+        this.username = username;
+        this.password = password;
+    }
 }

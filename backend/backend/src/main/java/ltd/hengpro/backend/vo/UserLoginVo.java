@@ -25,4 +25,9 @@ public class UserLoginVo implements Serializable
         this.username = userLogin.getUsername();
         this.password = userLogin.getPassword();
     }
+
+    public UserLoginVo(String username, String password) {
+        this.username = username;
+        this.password = password;
+    }
 }

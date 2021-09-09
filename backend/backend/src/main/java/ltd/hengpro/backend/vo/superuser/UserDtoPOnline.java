@@ -7,4 +7,11 @@ import ltd.hengpro.backend.dto.UserDto;
 public class UserDtoPOnline {
     UserDto userDto;
     Boolean online;
+
+    @Data
+    public static class PageableVo {
+        private Integer pageNum;
+        private Integer pageSize;
+        private String query;
+    }
 }

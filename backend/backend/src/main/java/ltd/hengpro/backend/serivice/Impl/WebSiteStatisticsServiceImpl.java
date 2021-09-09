@@ -13,12 +13,12 @@ public class WebSiteStatisticsServiceImpl implements WebSiteStatisticsService {
     SiteStatisticsDao siteStatisticsDao;
 
     @Override
-    public Integer getUserNum() {
+    public Long getUserNum() {
         return siteStatisticsDao.findById(1).get().getUserNum();
     }
 
     @Override
-    public SiteStatisticsVo getAllInfo() {
+    public SiteStatisticsVo getCountInfo() {
         SiteStatisticsVo siteStatisticsVo = new SiteStatisticsVo();
         BeanUtils.copyProperties(siteStatisticsDao.findById(1).get(),siteStatisticsVo);
         return siteStatisticsVo;

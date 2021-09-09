@@ -11,7 +11,7 @@ public class SiteStatistics {
     @Id
     private Integer Id;
 
-    private Integer userNum;
+    private Long userNum;
 
-    private Integer catNum;
+    private Long catNum;
 }

@@ -9,15 +9,21 @@
 
     <!--    卡片视图区域-->
     <el-card>
+      <!--        搜索与添加区域-->
       <el-row :gutter="20">
-        <!--        搜索与添加区域-->
         <el-col :span="7">
-          <el-input placeholder="请输入内容">
-            <el-button slot="append" icon="el-icon-search"></el-button>
+          <el-input placeholder="请输入内容" v-model="queryString" clearable>
+            <el-button
+              slot="append"
+              icon="el-icon-search"
+              @click="getUserListLike"
+            ></el-button>
           </el-input>
         </el-col>
         <el-col :span="4">
-          <el-button type="primary">添加用户</el-button>
+          <el-button type="primary" @click="addDialogVisible = true"
+            >添加用户</el-button
+          >
         </el-col>
       </el-row>
       <el-table :data="userList" border stripe>
@@ -44,10 +50,6 @@
         </el-table-column>
 
         <el-table-column label="操作员管理" align="center">
-          <el-table-column
-            label="操作员ID"
-            prop="staffDto.staffId"
-          ></el-table-column>
           <el-table-column
             label="操作员ID"
             prop="staffDto.staffId"
@@ -115,6 +117,55 @@
       >
       </el-pagination>
     </el-card>
+
+    <!--    添加用户对话框-->
+    <el-dialog
+      title="添加用户"
+      :visible.sync="addDialogVisible"
+      width="30%"
+      :before-close="handleDialogClose"
+    >
+      <!--      内容主题区-->
+
+      <el-form :model="addForm" ref="addFormRef" :rules="addFormRules">
+        <el-form-item label="用户名" prop="username">
+          <el-input
+            v-model="addForm.username"
+            placeholder="请输入用户名"
+          ></el-input>
+        </el-form-item>
+        <el-form-item label="用户密码" prop="password">
+          <el-input
+            v-model="addForm.password"
+            show-password
+            placeholder="请输入密码"
+          ></el-input>
+        </el-form-item>
+        <el-form-item label="用户组" prop="userGroup">
+          <el-select v-model="addForm.userGroup">
+            <el-option label="普通用户" value="NORMAL_USER"></el-option>
+            <el-option label="超级用户" value="SUPER_USER"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="操作员姓名" prop="staffName">
+          <el-input
+            v-model="addForm.staffName"
+            placeholder="请输入操作员姓名"
+          ></el-input>
+        </el-form-item>
+        <el-form-item label="操作员类别" prop="userGroup">
+          <el-select v-model="addForm.staffIdentity">
+            <el-option label="普通用户" value="NORMAL_USER"></el-option>
+            <el-option label="管理员" value="MANAGER"></el-option>
+          </el-select>
+        </el-form-item>
+      </el-form>
+
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="closeAddForm">取 消</el-button>
+        <el-button type="primary" @click="addFormSubmit">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -124,11 +175,32 @@ export default {
     return {
       //  获取客户列表参数对象
       queryInfo: {
+        query: "",
         pageNum: 0,
         pageSize: 2,
       },
+      queryString: "",
       userList: [],
       total: 0,
+      addDialogVisible: true,
+      // 添加用户的表单类型
+      addForm: {
+        username: "",
+        password: "",
+        userGroup: "",
+        staffName: "",
+        staffIdentity: "",
+      },
+      addFormRules: {
+        username: [
+          { required: true, message: "请输入用户名", trigger: "blur" },
+          { min: 4, max: 30, message: "长度在4-30之间", trigger: "blur" },
+        ],
+        password: [
+          { required: true, message: "请输入密码", trigger: "blur" },
+          { min: 6, max: 30, message: "长度在6-30之间", trigger: "blur" },
+        ],
+      },
     };
   },
   created() {
@@ -146,6 +218,11 @@ export default {
         this.userList = resp.data.u;
         this.total = resp.data.v.userNum;
       }
+    },
+    getUserListLike() {
+      this.queryInfo.query = this.queryString;
+      this.queryInfo.pageNum = 0;
+      this.getUserList();
     },
     //监听pagesize改变
     handleSizeChange(newPageSize) {
@@ -170,6 +247,27 @@ export default {
         this.$message.success("修改成功");
       }
     },
+    handleDialogClose() {
+      this.addDialogVisible = false;
+    },
+    addFormSubmit() {
+      console.log(this.addForm);
+      this.$http.post("/superuser_add_user",this.addForm);
+      this.addDialogVisible = false;
+    },
+    closeAddForm(){
+      this.clearAddForm();
+      this.addDialogVisible = false;
+    },
+    clearAddForm(){
+      this.addForm={
+        username: "",
+        password: "",
+        userGroup: "",
+        staffName: "",
+        staffIdentity: "",
+      };
+    }
   },
 };
 </script>
