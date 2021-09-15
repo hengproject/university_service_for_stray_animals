@@ -4,6 +4,7 @@ import Login from "../components/Login.vue";
 import Home from "../components/Home";
 import Welcome from "@/components/Welcome";
 import Users from "@/components/superUser/Users";
+import EditInformation from "@/components/normalUser/EditInformation";
 
 Vue.use(VueRouter);
 
@@ -17,6 +18,7 @@ const routes = [
     children: [
       { path: "/welcome", component: Welcome },
       { path: "/users", component: Users },
+      { path: "/editInformation", component: EditInformation },
     ],
   },
 ];

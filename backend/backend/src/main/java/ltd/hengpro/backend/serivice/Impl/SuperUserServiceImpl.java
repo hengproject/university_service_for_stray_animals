@@ -9,10 +9,13 @@ import ltd.hengpro.backend.entity.UserIdentity;
 import ltd.hengpro.backend.entity.UserLogin;
 import ltd.hengpro.backend.enums.StaffIdentityEnum;
 import ltd.hengpro.backend.enums.UserGroupEnum;
+import ltd.hengpro.backend.exception.UserAuthException;
 import ltd.hengpro.backend.form.superuser.AddUserForm;
+import ltd.hengpro.backend.form.superuser.EditUserForm;
 import ltd.hengpro.backend.serivice.*;
 import ltd.hengpro.backend.utils.UUIDUtil;
 import ltd.hengpro.backend.vo.UserLoginVo;
+import ltd.hengpro.backend.vo.superuser.RowInfoVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -105,4 +108,43 @@ public class SuperUserServiceImpl implements SuperUserService {
         webSiteStatisticsService.increaseUserNum();
     }
 
+    public void deleteUser(RowInfoVo rowInfoVo){
+        String userId = rowInfoVo.getUserLogin().getUserId();
+        String staffId = rowInfoVo.getStaffDto().getStaffId();
+        try{
+        userLoginService.deleteUserLoginById(userId);
+        }catch (UserAuthException userAuthException){
+            userAuthException.printStackTrace();
+        }
+        try {
+            userIdentityService.deleteUserIdentityByUserId(userId);
+        }catch (UserAuthException userAuthException){
+            userAuthException.printStackTrace();
+        }
+        try {
+            staffInfoService.delete(staffId);
+        }catch (UserAuthException userAuthException){
+            userAuthException.printStackTrace();
+        }
+        webSiteStatisticsService.decreaseUserNum();
+    }
+
+    public void modifyUser(EditUserForm editUserForm){
+        try {
+            userLoginService.editUserLogin(editUserForm);
+        }catch (UserAuthException userAuthException){
+            userAuthException.printStackTrace();
+        }
+        try{
+            userIdentityService.editUserIdentity(editUserForm);
+        }catch (UserAuthException userAuthException) {
+            userAuthException.printStackTrace();
+        }
+        try{
+            staffInfoService.edit(editUserForm);
+        }catch (UserAuthException userAuthException) {
+            userAuthException.printStackTrace();
+        }
+
+    }
 }

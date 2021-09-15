@@ -73,7 +73,7 @@
             </template>
           </el-table-column>
           <el-table-column label="操作">
-            <template slot-scope="">
+            <template slot-scope="scope">
               <el-button-group>
                 <el-tooltip
                   class="item"
@@ -86,6 +86,7 @@
                     type="primary"
                     icon="el-icon-edit"
                     size="mini"
+                    @click="showEditDialog(scope.row)"
                   ></el-button
                 ></el-tooltip>
                 <el-tooltip
@@ -99,6 +100,7 @@
                     type="danger"
                     icon="el-icon-delete"
                     size="mini"
+                    @click="deleteUser(scope.row)"
                   ></el-button
                 ></el-tooltip>
               </el-button-group>
@@ -166,6 +168,49 @@
         <el-button type="primary" @click="addFormSubmit">确 定</el-button>
       </span>
     </el-dialog>
+    <!--    修改用户对话框-->
+    <el-dialog title="添加用户" :visible.sync="editDialogVisible" width="30%">
+      <!--      内容主题区-->
+
+      <el-form :model="editForm" ref="editFormRef" :rules="editFormRules">
+        <el-form-item label="用户名" prop="username">
+          <el-input
+            v-model="editForm.userName"
+            placeholder="请输入用户名"
+          ></el-input>
+        </el-form-item>
+        <el-form-item label="用户密码" prop="password">
+          <el-input
+            v-model="editForm.password"
+            show-password
+            placeholder="请输入密码"
+          ></el-input>
+        </el-form-item>
+        <el-form-item label="用户组" prop="userGroup">
+          <el-select v-model="editForm.userGroup">
+            <el-option label="普通用户" value="NORMAL_USER"></el-option>
+            <el-option label="超级用户" value="SUPER_USER"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="操作员姓名" prop="staffName">
+          <el-input
+            v-model="editForm.staffName"
+            placeholder="请输入操作员姓名"
+          ></el-input>
+        </el-form-item>
+        <el-form-item label="操作员类别" prop="userGroup">
+          <el-select v-model="editForm.staffIdentity">
+            <el-option label="普通用户" value="NORMAL_USER"></el-option>
+            <el-option label="管理员" value="MANAGER"></el-option>
+          </el-select>
+        </el-form-item>
+      </el-form>
+
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="editDialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="editUserSubmit">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -205,6 +250,30 @@ export default {
           { min: 2, max: 30, message: "长度在6-30之间", trigger: "blur" },
         ],
       },
+      editDialogVisible: false,
+      editForm: {
+        userId: "",
+        userName: "",
+        password: "",
+        userGroup: "",
+        staffId: "",
+        staffName: "",
+        staffIdentity: "",
+      },
+      editFormRules: {
+        username: [
+          { required: true, message: "请输入用户名", trigger: "blur" },
+          { min: 4, max: 30, message: "长度在4-30之间", trigger: "blur" },
+        ],
+        password: [
+          { required: true, message: "请输入密码", trigger: "blur" },
+          { min: 6, max: 30, message: "长度在6-30之间", trigger: "blur" },
+        ],
+        staffName: [
+          { required: true, message: "请输入操作员姓名", trigger: "blur" },
+          { min: 2, max: 30, message: "长度在6-30之间", trigger: "blur" },
+        ],
+      },
     };
   },
   created() {
@@ -216,8 +285,10 @@ export default {
         "/superuser_getUserList",
         this.queryInfo
       );
-      if (resp.code === 403 || resp.code === 401)
-        return this.$message.error(resp.data.msg);
+      if (resp.code === 403 || resp.code === 401) {
+        this.$message.error(resp.msg);
+        this.logout();
+      }
       if (resp.code === 200) {
         this.userList = resp.data.u;
         this.total = resp.data.v.userNum;
@@ -244,7 +315,7 @@ export default {
         online: userInfo.online,
       });
       if (resp.code === 403 || resp.code === 401) {
-        this.$message.error(resp.data.msg);
+        this.$message.error(resp.msg);
         return this.logout();
       }
       if (resp.code === 200) {
@@ -260,13 +331,14 @@ export default {
         this.addForm
       );
       if (resp.code === 403 || resp.code === 401) {
-        this.$message.error(resp.data.msg);
+        this.$message.error(resp.msg);
         return this.logout();
       }
-      if (resp.code !== 200) return this.$message.error(resp.data.msg);
+      if (resp.code !== 200) return this.$message.error(resp.msg);
       if (resp.code === 200) {
         this.$message.success("添加成功");
         this.clearAddForm();
+        this.getUserList();
       }
       this.addDialogVisible = false;
     },
@@ -282,6 +354,50 @@ export default {
         staffName: "",
         staffIdentity: "",
       };
+    },
+    async deleteUser(rowInfo) {
+      const { data: resp } = await this.$http.post(
+        "/superuser_delete_user",
+        rowInfo
+      );
+      if (resp.code === 403 || resp.code === 401) {
+        this.$message.error(resp.msg);
+        return this.logout();
+      }
+      if (resp.code !== 200) return this.$message.error(resp.msg);
+      if (resp.code === 200) {
+        this.$message.success("删除成功");
+        this.getUserList();
+      }
+    },
+    //修改表单打开
+    showEditDialog(rowInfo) {
+      this.editDialogVisible = true;
+      this.editForm = {
+        userId: rowInfo.userLogin.userId,
+        userName: rowInfo.userLogin.username,
+        password: rowInfo.userLogin.password,
+        userGroup: rowInfo.userDto.userGroupEnum,
+        staffId: rowInfo.staffDto.staffId,
+        staffName: rowInfo.staffDto.staffName,
+        staffIdentity: rowInfo.staffDto.staffIdentityEnum,
+      };
+    },
+    async editUserSubmit() {
+      const { data: resp } = await this.$http.post(
+        "/superuser_modify_user",
+        this.editForm
+      );
+      if (resp.code === 403 || resp.code === 401) {
+        this.$message.error(resp.msg);
+        return this.logout();
+      }
+      if (resp.code !== 200) return this.$message.error(resp.msg);
+      if (resp.code === 200) {
+        this.$message.success("修改成功");
+        await this.getUserList();
+        this.editDialogVisible = false;
+      }
     },
   },
 };

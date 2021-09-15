@@ -5,6 +5,17 @@ spring:
     password: root
     url: jdbc:mysql://localhost/straymanager?characterEncoding=utf-8&useSSL=false&allowPublicKeyRetrieval=true
   jpa:
-    show-sql: true
+    show-sql: false
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+      enabled: true
+
 server:
   port: 8080
+
+
+file:
+  upload:
+    save_path: ./

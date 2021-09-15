@@ -70,4 +70,24 @@ class UserLoginDaoTest {
         UserLogin ysh = userLoginDao.findUserLoginByUsername("ysh");
         System.out.println(ysh);
     }
+
+    @Test
+    @Transactional
+    void deleteUserLoginByUserId(){
+        userLoginDao.deleteById("5");
+    }
+    @Test
+    @Transactional
+    void editUserLogin(){
+        UserLogin yshhghhh = new UserLogin("1", "yshhghhh", "99999");
+        UserLogin userLogin = userLoginDao.saveAndFlush(yshhghhh);
+        System.out.println(userLogin);
+
+    }
+    @Test
+    void findUserById(){
+        UserLogin userLoginByUserId = userLoginDao.findUserLoginByUserId("5");
+        System.out.println(userLoginByUserId);
+    }
+
 }

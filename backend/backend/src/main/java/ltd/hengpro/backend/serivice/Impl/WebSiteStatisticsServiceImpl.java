@@ -32,4 +32,13 @@ public class WebSiteStatisticsServiceImpl implements WebSiteStatisticsService {
         byId.setUserNum(l);
         siteStatisticsDao.saveAndFlush(byId);
     }
+
+    @Override
+    public void decreaseUserNum() {
+        SiteStatistics byId = siteStatisticsDao.getById(1);
+        long l = byId.getUserNum() - 1 ;
+        byId.setUserNum(l);
+        siteStatisticsDao.saveAndFlush(byId);
+    }
+
 }

@@ -5,13 +5,17 @@ import ltd.hengpro.backend.dao.UserLoginDao;
 import ltd.hengpro.backend.dto.UserDto;
 import ltd.hengpro.backend.entity.UserIdentity;
 import ltd.hengpro.backend.entity.UserLogin;
+import ltd.hengpro.backend.enums.ExceptionEnum;
 import ltd.hengpro.backend.enums.SpecialIdentityEnum;
 import ltd.hengpro.backend.enums.UserGroupEnum;
+import ltd.hengpro.backend.exception.UserAuthException;
+import ltd.hengpro.backend.form.superuser.EditUserForm;
 import ltd.hengpro.backend.serivice.UserLoginService;
 import ltd.hengpro.backend.utils.EnumUtil;
 import ltd.hengpro.backend.utils.UUIDUtil;
 import ltd.hengpro.backend.vo.UserLoginVo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
@@ -43,5 +47,22 @@ public class UserLoginServiceImpl implements UserLoginService {
     public boolean containUser(String username){
         UserLogin userLoginByUsername = userLoginDao.findUserLoginByUsername(username);
         return !ObjectUtils.isEmpty(userLoginByUsername);
+    }
+
+    public void deleteUserLoginById(String userId){
+        try {
+            userLoginDao.deleteById(userId);
+        }catch (EmptyResultDataAccessException e){
+            throw new UserAuthException(ExceptionEnum.DELETE_INFO_DAO_NOT_FOUND);
+        }
+    }
+
+    public void editUserLogin(EditUserForm editUserForm){
+        UserLogin userLoginByUserId = userLoginDao.findUserLoginByUserId(editUserForm.getUserId());
+        if(ObjectUtils.isEmpty(userLoginByUserId)){
+            throw new UserAuthException(ExceptionEnum.EDIT_USER_NOT_FOUND);
+        }
+        UserLogin userLogin = new UserLogin(editUserForm.getUserId(), editUserForm.getUserName(), editUserForm.getPassword());
+        userLoginDao.saveAndFlush(userLogin);
     }
 }

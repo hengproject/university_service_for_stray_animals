@@ -3,20 +3,19 @@ package ltd.hengpro.backend.controller;
 import com.alibaba.fastjson.JSON;
 import ltd.hengpro.backend.dto.SuperUserInfoDto;
 import ltd.hengpro.backend.dto.UserDto;
-import ltd.hengpro.backend.entity.UserIdentity;
-import ltd.hengpro.backend.entity.UserLogin;
 import ltd.hengpro.backend.enums.UserGroupEnum;
 import ltd.hengpro.backend.exception.UserAuthException;
 import ltd.hengpro.backend.form.superuser.AddUserForm;
+import ltd.hengpro.backend.form.superuser.EditUserForm;
 import ltd.hengpro.backend.serivice.SuperUserService;
 import ltd.hengpro.backend.serivice.TokenService;
-import ltd.hengpro.backend.serivice.UserLoginService;
 import ltd.hengpro.backend.serivice.WebSiteStatisticsService;
 import ltd.hengpro.backend.utils.RequestUtil;
 import ltd.hengpro.backend.vo.Combine2Vo;
 import ltd.hengpro.backend.vo.ResultVo;
 import ltd.hengpro.backend.vo.SiteStatisticsVo;
-import ltd.hengpro.backend.vo.superuser.UserDtoPOnline;
+import ltd.hengpro.backend.vo.superuser.RowInfoVo;
+import ltd.hengpro.backend.vo.superuser.UserDtoPOnlineVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.util.ObjectUtils;
@@ -46,7 +45,7 @@ public class SuperUserController {
         String authorization = authorization(httpServletRequest);
         if(!ObjectUtils.isEmpty(authorization)) return authorization;
         String requestData = RequestUtil.getRequestData(httpServletRequest);
-        UserDtoPOnline.PageableVo pageableVo = JSON.parseObject(requestData, UserDtoPOnline.PageableVo.class);
+        UserDtoPOnlineVo.PageableVo pageableVo = JSON.parseObject(requestData, UserDtoPOnlineVo.PageableVo.class);
         List<SuperUserInfoDto> superUserInfoDtos;
         SiteStatisticsVo countInfo = webSiteStatisticsService.getCountInfo();
         if(ObjectUtils.isEmpty(pageableVo.getQuery())) {
@@ -65,8 +64,8 @@ public class SuperUserController {
         String authorization = authorization(httpServletRequest);
         if(!ObjectUtils.isEmpty(authorization)) return authorization;
         String requestData = RequestUtil.getRequestData(httpServletRequest);
-        UserDtoPOnline userDtoPOnline = JSON.parseObject(requestData, UserDtoPOnline.class);
-        superUserService.loginOrLogout(userDtoPOnline.getUserDto(),userDtoPOnline.getOnline());
+        UserDtoPOnlineVo userDtoPOnlineVo = JSON.parseObject(requestData, UserDtoPOnlineVo.class);
+        superUserService.loginOrLogout(userDtoPOnlineVo.getUserDto(), userDtoPOnlineVo.getOnline());
         return JSON.toJSONString(new ResultVo<Object>(200,"success",null));
     }
 
@@ -76,10 +75,32 @@ public class SuperUserController {
         if(!ObjectUtils.isEmpty(authorization)) return authorization;
         String requestData = RequestUtil.getRequestData(httpServletRequest);
         AddUserForm addUserForm = JSON.parseObject(requestData, AddUserForm.class);
-        if(!validate(addUserForm)) return JSON.toJSONString(new ResultVo<Object>(400,"信息填写不完全,请重新填写",null));
-        if(!registerValidate(addUserForm)) return JSON.toJSONString(new ResultVo<Object>(403,"用户名重复，添加失败",null));
+        if(!addUserForm.validate()) return JSON.toJSONString(new ResultVo<Object>(400,"信息填写不完全,请重新填写",null));
+        if(!registerValidate(addUserForm)) return JSON.toJSONString(new ResultVo<Object>(406,"用户名重复，添加失败",null));
 
         superUserService.registerUser(addUserForm);
+        return JSON.toJSONString(new ResultVo<Object>(200,"success",null));
+    }
+
+    @PostMapping("/superuser_delete_user")
+    public String DeleteUser(HttpServletRequest httpServletRequest) throws IOException {
+        String authorization = authorization(httpServletRequest);
+        if(!ObjectUtils.isEmpty(authorization)) return authorization;
+        String requestData = RequestUtil.getRequestData(httpServletRequest);
+        RowInfoVo rowInfoVo = JSON.parseObject(requestData, RowInfoVo.class);
+        superUserService.deleteUser(rowInfoVo);
+        return JSON.toJSONString(new ResultVo<Object>(200,"success",null));
+    }
+
+
+
+    @PostMapping("/superuser_modify_user")
+    public String ModifyUser(HttpServletRequest httpServletRequest) throws IOException {
+        String authorization = authorization(httpServletRequest);
+        if (!ObjectUtils.isEmpty(authorization)) return authorization;
+        String requestData = RequestUtil.getRequestData(httpServletRequest);
+        EditUserForm editUserForm = JSON.parseObject(requestData, EditUserForm.class);
+        superUserService.modifyUser(editUserForm);
         return JSON.toJSONString(new ResultVo<Object>(200,"success",null));
     }
 
@@ -96,9 +117,7 @@ public class SuperUserController {
         return null;
     }
 
-    private boolean validate(AddUserForm addUserForm){
-        return addUserForm.getPassword() != null && addUserForm.getUsername() != null && addUserForm.getUserGroup() != null && addUserForm.getStaffIdentity() != null && addUserForm.getStaffName() != null;
-    }
+
     private boolean registerValidate(AddUserForm addUserForm){
         return !superUserService.containsUser(addUserForm.getUsername());
     }

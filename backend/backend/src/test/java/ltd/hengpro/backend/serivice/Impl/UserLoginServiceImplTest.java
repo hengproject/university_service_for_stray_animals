@@ -41,4 +41,10 @@ class UserLoginServiceImplTest {
         boolean ysh = userLoginService.containUser("ysh");
         System.out.println(ysh);
     }
+
+    @Test
+    @Transactional
+    void delete(){
+        userLoginService.deleteUserLoginById("5");
+    }
 }
