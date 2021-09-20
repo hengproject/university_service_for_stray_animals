@@ -58,8 +58,22 @@ public class ManagerController {
         managerService.editCampus(campusVo);
         return JSON.toJSONString(new ResultVo<>(200, "success", null));
     }
-
-
+    @PostMapping("/manager_delete_campus_information")
+    public String deleteCampus(HttpServletRequest httpServletRequest) throws IOException {
+        String authorization = authorization(httpServletRequest);
+        if (!ObjectUtils.isEmpty(authorization)) return authorization;
+        String requestData = RequestUtil.getRequestData(httpServletRequest);
+        managerService.deleteCampusByCampusId(Integer.valueOf(requestData));
+        return JSON.toJSONString(new ResultVo<>(200,"success",null));
+    }
+    @PostMapping("/manager_add_campus_information")
+    public String addCampus(HttpServletRequest httpServletRequest) throws IOException {
+        String authorization = authorization(httpServletRequest);
+        if (!ObjectUtils.isEmpty(authorization)) return authorization;
+        String requestData = RequestUtil.getRequestData(httpServletRequest);
+        managerService.addCampus(requestData);
+        return JSON.toJSONString(new ResultVo<>(200,"success",null));
+    }
     @PostMapping("/manager_get_basic_info_list_lazy_get_area")
     public String getArea(HttpServletRequest httpServletRequest) throws IOException {
         String authorization = authorization(httpServletRequest);

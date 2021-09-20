@@ -9,4 +9,6 @@ public interface ManagerService {
     List<CampusVo> getCampusList();
     List<CampusVo> getAreaAsCampusVoFromCampusId(Integer campusId);
     void editCampus(CampusVo campusVo);
+    void deleteCampusByCampusId(Integer campusId);
+    Campus addCampus(String campusName);
 }

@@ -66,4 +66,8 @@ public class ManagerServiceImpl implements ManagerService {
             campus.setCampusName(campusVo.getCampusName());
             campusService.editCampus(campus);
         }
+
+        public void deleteCampusByCampusId(Integer campusId){
+            campusService.deleteCampusById(campusId);
+        }
 }

@@ -29,7 +29,7 @@ import {
   Option,
   Descriptions,
   DescriptionsItem,
-  Upload,
+  Upload, Popover, Drawer
 } from "element-ui";
 
 Vue.use(Button);
@@ -61,4 +61,6 @@ Vue.use(Option);
 Vue.use(Descriptions);
 Vue.use(DescriptionsItem);
 Vue.use(Upload);
+Vue.use(Popover);
+Vue.use(Drawer);
 Vue.prototype.$message = Message;
