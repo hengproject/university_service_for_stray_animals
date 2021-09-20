@@ -4,7 +4,7 @@
     <el-header>
       <div><img src="../assets/logo.png" class="logo" /></div>
       <p class="header-text">流浪动物管理系统</p>
-      <el-button type="info" @click="logout">退出</el-button></el-header
+      <el-button type="info" @click="this.$logout()">退出</el-button></el-header
     >
 
     <el-container>
@@ -55,7 +55,7 @@
 </template>
 
 <script>
-import * as auth from "./auth";
+import * as auth from "./utils/auth";
 
 export default {
   data() {

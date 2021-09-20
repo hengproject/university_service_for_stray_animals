@@ -3,6 +3,8 @@ package ltd.hengpro.backend.entity;
 import lombok.Data;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import java.io.Serializable;
 
@@ -17,12 +19,13 @@ public class Area implements Serializable
 
     /** 活动区域id */
     @Id
-    private String areaId;
+    @GeneratedValue(strategy= GenerationType.IDENTITY)
+    private Integer areaId;
 
     /** 活动区域名称 */
     private String areaName;
 
     /** 校区id */
-    private String campusId;
+    private Integer campusId;
 
 }

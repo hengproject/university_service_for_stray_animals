@@ -49,6 +49,9 @@ public class StaffInfo implements Serializable
 
     private String staffName;
 
+    private String qq;
+
+    private String phoneNum;
     public StaffInfo() {
     }
 

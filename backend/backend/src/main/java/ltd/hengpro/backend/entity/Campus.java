@@ -3,6 +3,8 @@ package ltd.hengpro.backend.entity;
 import lombok.Data;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import java.io.Serializable;
 
@@ -17,7 +19,8 @@ public class Campus implements Serializable
 
     /** 校区id */
     @Id
-    private String campusId;
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    private Integer campusId;
 
     /** 校区名称 */
     private String campusName;

@@ -5,6 +5,8 @@ import Home from "../components/Home";
 import Welcome from "@/components/Welcome";
 import Users from "@/components/superUser/Users";
 import EditInformation from "@/components/normalUser/EditInformation";
+import CatDocuments from "@/components/normalUser/CatDocuments";
+import ModifyBasicInformation from "@/components/manager/ModifyBasicInformation";
 
 Vue.use(VueRouter);
 
@@ -19,6 +21,8 @@ const routes = [
       { path: "/welcome", component: Welcome },
       { path: "/users", component: Users },
       { path: "/editInformation", component: EditInformation },
+      { path: "/catDocuments", component: CatDocuments },
+      { path: "/modifyBasicInformation", component: ModifyBasicInformation },
     ],
   },
 ];

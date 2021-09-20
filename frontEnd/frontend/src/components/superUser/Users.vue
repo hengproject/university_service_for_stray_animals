@@ -169,7 +169,7 @@
       </span>
     </el-dialog>
     <!--    修改用户对话框-->
-    <el-dialog title="添加用户" :visible.sync="editDialogVisible" width="30%">
+    <el-dialog title="修改用户" :visible.sync="editDialogVisible" width="30%">
       <!--      内容主题区-->
 
       <el-form :model="editForm" ref="editFormRef" :rules="editFormRules">
@@ -271,7 +271,7 @@ export default {
         ],
         staffName: [
           { required: true, message: "请输入操作员姓名", trigger: "blur" },
-          { min: 2, max: 30, message: "长度在6-30之间", trigger: "blur" },
+          { min: 2, max: 30, message: "长度在2-30之间", trigger: "blur" },
         ],
       },
     };
@@ -280,6 +280,10 @@ export default {
     this.getUserList();
   },
   methods: {
+    logout() {
+      window.sessionStorage.clear();
+      this.$router.push("/login");
+    },
     async getUserList() {
       let { data: resp } = await this.$http.post(
         "/superuser_getUserList",

@@ -27,6 +27,9 @@ import {
   Dialog,
   Select,
   Option,
+  Descriptions,
+  DescriptionsItem,
+  Upload,
 } from "element-ui";
 
 Vue.use(Button);
@@ -55,4 +58,7 @@ Vue.use(ButtonGroup);
 Vue.use(Dialog);
 Vue.use(Select);
 Vue.use(Option);
+Vue.use(Descriptions);
+Vue.use(DescriptionsItem);
+Vue.use(Upload);
 Vue.prototype.$message = Message;

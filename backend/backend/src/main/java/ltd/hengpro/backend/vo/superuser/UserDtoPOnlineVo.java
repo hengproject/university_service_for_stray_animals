@@ -8,10 +8,4 @@ public class UserDtoPOnlineVo {
     UserDto userDto;
     Boolean online;
 
-    @Data
-    public static class PageableVo {
-        private Integer pageNum;
-        private Integer pageSize;
-        private String query;
-    }
 }

@@ -1,22 +1,24 @@
 package ltd.hengpro.backend.dto;
 
+import lombok.Data;
 import ltd.hengpro.backend.enums.SpecialIdentityEnum;
 import ltd.hengpro.backend.enums.UserGroupEnum;
 
 import java.io.Serializable;
 
+@Data
 public class UserDto implements Serializable {
-    public String userId;
+    private String userId;
 
-    public String username;
+    private String username;
 
-    public UserGroupEnum userGroupEnum;
+    private UserGroupEnum userGroupEnum;
 
-    public SpecialIdentityEnum specialIdentityEnum;
+    private SpecialIdentityEnum specialIdentityEnum;
 
-    public String token;
+    private String token;
 
-    public String staffId;
+    private String staffId;
 
     public String getStaffId() {
         return staffId;

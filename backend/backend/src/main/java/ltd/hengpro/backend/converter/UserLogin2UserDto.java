@@ -2,7 +2,7 @@ package ltd.hengpro.backend.converter;
 
 import ltd.hengpro.backend.dto.UserDto;
 import ltd.hengpro.backend.entity.UserLogin;
-import ltd.hengpro.backend.serivice.UserLoginService;
+import ltd.hengpro.backend.service.UserLoginService;
 import ltd.hengpro.backend.vo.UserLoginVo;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;

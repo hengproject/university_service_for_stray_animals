@@ -7,11 +7,12 @@ import ltd.hengpro.backend.enums.UserGroupEnum;
 import ltd.hengpro.backend.exception.UserAuthException;
 import ltd.hengpro.backend.form.superuser.AddUserForm;
 import ltd.hengpro.backend.form.superuser.EditUserForm;
-import ltd.hengpro.backend.serivice.SuperUserService;
-import ltd.hengpro.backend.serivice.TokenService;
-import ltd.hengpro.backend.serivice.WebSiteStatisticsService;
+import ltd.hengpro.backend.service.SuperUserService;
+import ltd.hengpro.backend.service.TokenService;
+import ltd.hengpro.backend.service.WebSiteStatisticsService;
 import ltd.hengpro.backend.utils.RequestUtil;
 import ltd.hengpro.backend.vo.Combine2Vo;
+import ltd.hengpro.backend.vo.PageableVo;
 import ltd.hengpro.backend.vo.ResultVo;
 import ltd.hengpro.backend.vo.SiteStatisticsVo;
 import ltd.hengpro.backend.vo.superuser.RowInfoVo;
@@ -45,7 +46,7 @@ public class SuperUserController {
         String authorization = authorization(httpServletRequest);
         if(!ObjectUtils.isEmpty(authorization)) return authorization;
         String requestData = RequestUtil.getRequestData(httpServletRequest);
-        UserDtoPOnlineVo.PageableVo pageableVo = JSON.parseObject(requestData, UserDtoPOnlineVo.PageableVo.class);
+        PageableVo pageableVo = JSON.parseObject(requestData, PageableVo.class);
         List<SuperUserInfoDto> superUserInfoDtos;
         SiteStatisticsVo countInfo = webSiteStatisticsService.getCountInfo();
         if(ObjectUtils.isEmpty(pageableVo.getQuery())) {
