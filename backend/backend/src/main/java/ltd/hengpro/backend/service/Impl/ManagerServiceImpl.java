@@ -60,5 +60,10 @@ public class ManagerServiceImpl implements ManagerService {
         return campusVoList;
     }
 
-
+        public void editCampus(CampusVo campusVo){
+            Campus campus = new Campus();
+            campus.setCampusId(Integer.valueOf(campusVo.getCampusId()));
+            campus.setCampusName(campusVo.getCampusName());
+            campusService.editCampus(campus);
+        }
 }

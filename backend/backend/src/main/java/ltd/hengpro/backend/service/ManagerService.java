@@ -8,4 +8,5 @@ import java.util.List;
 public interface ManagerService {
     List<CampusVo> getCampusList();
     List<CampusVo> getAreaAsCampusVoFromCampusId(Integer campusId);
+    void editCampus(CampusVo campusVo);
 }

@@ -48,6 +48,7 @@
     >
       <el-form>
         <el-form-item label="校区ID">
+          <br />
           {{ campusEdit.campusId }}
         </el-form-item>
         <el-form-item label="校区名">
@@ -57,7 +58,7 @@
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button @click="editCampusDialogVisible = false">取 消</el-button>
-        <el-button type="primary">确 定</el-button>
+        <el-button type="primary" @click="confirmEditCampus">确 定</el-button>
       </span>
     </el-dialog>
     <!--    添加Area-->
@@ -71,11 +72,12 @@ export default {
   name: "ModifyBasicInformation",
   data() {
     return {
-      campusForm: {},
+      campusForm: [],
       editCampusDialogVisible: true,
       campusEdit: {
         campusId: "",
         campusName: "",
+        hasSon: true,
       },
     };
   },
@@ -111,11 +113,21 @@ export default {
       resolve(resp.data);
     },
     showEditCampusDialog(row) {
-      console.log(row);
-
-      // this.campusEdit.campusId = row.campusId;
-      // this.campusEdit.campusName = row.campusName;
-      // this.editCampusDialogVisible = true;
+      this.campusEdit.campusId = row.campusId;
+      this.campusEdit.campusName = row.campusName;
+      this.editCampusDialogVisible = true;
+    },
+    async confirmEditCampus() {
+       let{data:resp}= await this.$http.post(
+        "/manager_edit_campus_information",
+        this.campusEdit
+      );
+      if (!respFilter(resp)) {
+        this.$message.error(resp.msg);
+        this.logout();
+        return;
+      }
+      this.$message.success("修改成功")
     },
   },
 };

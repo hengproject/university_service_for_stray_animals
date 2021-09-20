@@ -12,4 +12,5 @@ public interface CampusService {
     Campus addCampus(String campusName);
     List<Campus> getCampusList();
     List<Area> getAreaListByCampusId(Integer campusId);
+    Campus editCampus(Campus campus);
 }
