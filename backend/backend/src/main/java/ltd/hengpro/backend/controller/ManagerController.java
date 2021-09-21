@@ -7,6 +7,7 @@ import ltd.hengpro.backend.entity.StaffInfo;
 import ltd.hengpro.backend.enums.StaffIdentityEnum;
 import ltd.hengpro.backend.enums.UserGroupEnum;
 import ltd.hengpro.backend.exception.UserAuthException;
+import ltd.hengpro.backend.form.manager.AddAreaForm;
 import ltd.hengpro.backend.service.ManagerService;
 import ltd.hengpro.backend.service.StaffInfoService;
 import ltd.hengpro.backend.service.TokenService;
@@ -82,7 +83,34 @@ public class ManagerController {
         List<CampusVo> areaAsCampusVoFromCampusId = managerService.getAreaAsCampusVoFromCampusId(Integer.parseInt(requestData));
         return JSON.toJSONString(new ResultVo<>(200,"success",areaAsCampusVoFromCampusId));
     }
-    
+    @PostMapping("/manager_add_area")
+    public String addArea(HttpServletRequest httpServletRequest) throws IOException {
+        String authorization = authorization(httpServletRequest);
+        if (!ObjectUtils.isEmpty(authorization)) return authorization;
+        String requestData = RequestUtil.getRequestData(httpServletRequest);
+        AddAreaForm addAreaForm = JSON.parseObject(requestData, AddAreaForm.class);
+        managerService.addArea(addAreaForm);
+        return JSON.toJSONString(new ResultVo<>(200,"success",null));
+    }
+    @PostMapping("/manager_delete_area")
+    public String deleteArea(HttpServletRequest httpServletRequest) throws IOException {
+        String authorization = authorization(httpServletRequest);
+        if (!ObjectUtils.isEmpty(authorization)) return authorization;
+        String requestData = RequestUtil.getRequestData(httpServletRequest);
+
+        managerService.deleteAreaById(Integer.valueOf(requestData));
+        return JSON.toJSONString(new ResultVo<>(200,"success",null));
+    }
+
+    @PostMapping("/manager_edit_area")
+    public String editArea(HttpServletRequest httpServletRequest) throws IOException {
+        String authorization = authorization(httpServletRequest);
+        if (!ObjectUtils.isEmpty(authorization)) return authorization;
+        String requestData = RequestUtil.getRequestData(httpServletRequest);
+        CampusVo campusVo = JSON.parseObject(requestData, CampusVo.class);
+        managerService.editArea(campusVo);
+        return JSON.toJSONString(new ResultVo<>(200,"success",null));
+    }
     private String authorization(HttpServletRequest httpServletRequest) {
         String authorization = httpServletRequest.getHeader("Authorization");
 

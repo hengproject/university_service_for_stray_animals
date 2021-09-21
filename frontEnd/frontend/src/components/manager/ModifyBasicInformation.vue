@@ -13,10 +13,12 @@
       <el-row :gutter="20">
         <el-col :span="7">
           <el-button type="primary" @click="addCampusDialogVisible = true"
-          >添加校区</el-button
+            >添加校区</el-button
+          >
+          <el-button type="primary" @click="addAreaDialogVisible = true"
+            >添加具体区域</el-button
           >
         </el-col>
-
       </el-row>
       <el-table
         :data="campusForm"
@@ -24,6 +26,7 @@
         row-key="campusId"
         border
         lazy
+        ref="campusFormRef"
         :load="loadArea"
         :tree-props="{ children: 'son', hasChildren: 'hasSon' }"
       >
@@ -119,6 +122,34 @@
       </div>
     </el-drawer>
     <!--    添加Area-->
+    <el-dialog
+      title="添加区域信息"
+      :visible.sync="addAreaDialogVisible"
+      width="30%"
+    >
+      <el-form :model="newArea" :rules="addAreaRules">
+        <el-form-item label="校区" prop="campus">
+          <el-select v-model="newArea.campusId">
+            <el-option
+              v-for="campus in campusForm"
+              :key="campus.campusId"
+              :label="campus.campusName"
+              :value="campus.campusId"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="区域名" prop="areaName">
+          <el-input
+            v-model="newArea.areaName"
+            placeholder="请输入区域名"
+          ></el-input>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="addAreaDialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="confirmAddArea()">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -129,6 +160,7 @@ export default {
   name: "ModifyBasicInformation",
   data() {
     return {
+      map: new Map(),
       campusForm: [],
       editCampusDialogVisible: false,
       campusEdit: {
@@ -139,8 +171,19 @@ export default {
       deleteCampusDrawer: false,
       deleteCampusDrawerInfoList: [],
       deleteCampusDrawerId: "",
-      newCampusName:"",
-      addCampusDialogVisible:false,
+      newCampusName: "",
+      addCampusDialogVisible: false,
+      addAreaDialogVisible: false,
+      newArea: {
+        areaName: "",
+        campusId: "",
+      },
+      addAreaRules: {
+        campus: [{ required: true, message: "请选择校区", trigger: "blur" }],
+        areaName: [
+          { required: true, message: "请输入区域名", trigger: "blur" },
+        ],
+      },
     };
   },
   created() {
@@ -163,6 +206,8 @@ export default {
     },
     // eslint-disable-next-line no-unused-vars
     async loadArea(tree, treeNode, resolve) {
+      let id = tree.campusId;
+      this.map.set(id, { tree, treeNode, resolve });
       let { data: resp } = await this.$http.post(
         "/manager_get_basic_info_list_lazy_get_area",
         tree.campusId
@@ -180,30 +225,71 @@ export default {
       this.editCampusDialogVisible = true;
     },
     async confirmEditCampus() {
-      let { data: resp } = await this.$http.post(
-        "/manager_edit_campus_information",
-        this.campusEdit
-      );
-      if (!respFilter(resp)) {
-        this.$message.error(resp.msg);
-        this.logout();
-        return;
+      if (!Number.isInteger(parseFloat(this.campusEdit.campusId))) {
+        const campusId = this.campusEdit.campusId.split(".")[0]
+        this.campusEdit.campusId=this.campusEdit.campusId.split(".")[1];
+        let { data: resp } = await this.$http.post(
+          "/manager_edit_area",
+          this.campusEdit
+        );
+        if (!respFilter(resp)) {
+          this.$message.error(resp.msg);
+          this.logout();
+          return;
+        }
+        this.editCampusDialogVisible=false;
+        this.reloadAreaInfo(campusId);
+      } else {
+        let { data: resp } = await this.$http.post(
+          "/manager_edit_campus_information",
+          this.campusEdit
+        );
+        if (!respFilter(resp)) {
+          this.$message.error(resp.msg);
+          this.logout();
+          return;
+        }
+        this.editCampusDialogVisible=false;
+        this.$message.success("修改成功");
+        this.$router.go(0);
       }
-      this.$message.success("修改成功");
+    },
+    async reloadAreaInfo(stringfyId) {
+      const { tree, treeNode, resolve } = this.map.get(stringfyId);
+      await this.loadArea(tree, treeNode, resolve);
     },
     async showDeleteCampus(rowInfo) {
-      this.deleteCampusDrawer = true;
-      let { data: resp } = await this.$http.post(
-        "/manager_get_basic_info_list_lazy_get_area",
-        rowInfo.campusId
-      );
-      if (!respFilter(resp)) {
-        this.$message.error(resp.msg);
-        this.logout();
-        return;
+      if (!Number.isInteger(parseFloat(rowInfo.campusId))) {
+        let { data: resp } = await this.$http.post(
+          "/manager_delete_area",
+          rowInfo.campusId.split(".")[1]
+        );
+        if (!respFilter(resp)) {
+          this.$message.error(resp.msg);
+          this.logout();
+          return;
+        }
+
+        // let array=this.$refs.campusFormRef.store.states.lazyTreeNodeMap[parseInt(rowInfo.campusId)];
+        // let indexOf = array.indexOf(rowInfo);
+        // let spliceArray = array.splice(indexOf,1);
+        let stringfyId = parseInt(rowInfo.campusId) + "";
+        await this.reloadAreaInfo(stringfyId);
+        return this.$message.success("删除区域成功");
+      } else {
+        this.deleteCampusDrawer = true;
+        let { data: resp } = await this.$http.post(
+          "/manager_get_basic_info_list_lazy_get_area",
+          rowInfo.campusId
+        );
+        if (!respFilter(resp)) {
+          this.$message.error(resp.msg);
+          this.logout();
+          return;
+        }
+        this.deleteCampusDrawerInfoList = resp.data;
+        this.deleteCampusDrawerId = rowInfo.campusId;
       }
-      this.deleteCampusDrawerInfoList = resp.data;
-      this.deleteCampusDrawerId = rowInfo.campusId;
     },
     async confirmDeleteCampus() {
       let { data: resp } = await this.$http.post(
@@ -219,20 +305,40 @@ export default {
       this.deleteCampusDrawer = false;
       this.getFormList();
     },
-    async confirmAddCampus(){
-      let { data: resp } = await this.$http.post("/manager_add_campus_information",this.newCampusName);
+    async confirmAddCampus() {
+      let { data: resp } = await this.$http.post(
+        "/manager_add_campus_information",
+        this.newCampusName
+      );
       if (!respFilter(resp)) {
         this.$message.error(resp.msg);
         this.logout();
         return;
       }
       this.$message.success("添加成功");
-      this.addCampusDialogVisible=false;
+      (this.newCampusName = ""), (this.addCampusDialogVisible = false);
       this.getFormList();
     },
+    async confirmAddArea() {
+      let { data: resp } = await this.$http.post(
+        "manager_add_area",
+        this.newArea
+      );
+      if (!respFilter(resp)) {
+        this.$message.error(resp.msg);
+        this.logout();
+        return;
+      }
+      this.addAreaDialogVisible = false;
+
+      this.reloadAreaInfo(this.newArea.campusId);
+      this.$message.success("添加成功");
+      this.newArea = {
+        areaName: "",
+        campusId: "",
+      };
+    },
   },
-
-
 };
 </script>
 

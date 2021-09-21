@@ -4,6 +4,7 @@ import ltd.hengpro.backend.entity.Area;
 import ltd.hengpro.backend.entity.Campus;
 import ltd.hengpro.backend.enums.ExceptionEnum;
 import ltd.hengpro.backend.exception.DaoException;
+import ltd.hengpro.backend.form.manager.AddAreaForm;
 import ltd.hengpro.backend.service.CampusService;
 import ltd.hengpro.backend.service.ManagerService;
 import ltd.hengpro.backend.vo.manager.CampusVo;
@@ -38,9 +39,23 @@ public class ManagerServiceImpl implements ManagerService {
         return campusVoList;
     }
 
-    public void addArea(Area area){
-
+    public void addArea(AddAreaForm addAreaForm){
+        Area area = new Area();
+        area.setAreaName(addAreaForm.getAreaName());
+        area.setCampusId(Integer.valueOf(addAreaForm.getCampusId()));
+        campusService.addArea(area);
     }
+
+    public void deleteAreaById(Integer areaId){
+        campusService.deleteArea(areaId);
+    }
+
+    @Override
+    public void editArea(CampusVo campusVo) {
+
+        campusService.editArea(campusVo);
+    }
+
     public Campus addCampus(String campusName){
         Campus campusByName = campusService.getCampusByName(campusName);
         if(!ObjectUtils.isEmpty(campusByName))throw new DaoException(ExceptionEnum.RE_ADD_EXCEPTION);

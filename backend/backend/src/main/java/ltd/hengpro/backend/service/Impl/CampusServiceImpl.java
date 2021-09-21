@@ -5,12 +5,14 @@ import ltd.hengpro.backend.dao.CampusDao;
 import ltd.hengpro.backend.entity.Area;
 import ltd.hengpro.backend.entity.Campus;
 import ltd.hengpro.backend.service.CampusService;
+import ltd.hengpro.backend.vo.manager.CampusVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CampusServiceImpl implements CampusService {
@@ -46,6 +48,11 @@ public class CampusServiceImpl implements CampusService {
     public Campus editCampus(Campus campus){
         return campusDao.saveAndFlush(campus);
     }
+    public void editArea(CampusVo campusVo){
+        Area area = areaDao.findById(Integer.valueOf(campusVo.getCampusId())).get();
+        area.setAreaName(campusVo.getCampusName());
+        areaDao.saveAndFlush(area);
+    }
 
     public List<Campus> getCampusList(){
 
@@ -54,5 +61,12 @@ public class CampusServiceImpl implements CampusService {
 
     public List<Area> getAreaListByCampusId(Integer campusId){
         return areaDao.findByCampusId(campusId);
+    }
+    public Area addArea(Area area){
+        return areaDao.saveAndFlush(area);
+    }
+    public void deleteArea(Integer areaId){
+        Optional<Area> byId = areaDao.findById(areaId);
+        areaDao.delete(byId.get());
     }
 }
