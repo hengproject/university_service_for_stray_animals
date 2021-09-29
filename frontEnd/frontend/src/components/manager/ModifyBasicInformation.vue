@@ -106,7 +106,7 @@
       <h4 style="text-align: center">以下区域将会被同步删除</h4>
       <el-table
         :data="deleteCampusDrawerInfoList"
-        style="width: 60%; transform: translateX(50%)"
+        style="width: 50%; transform: translateX(50%)"
         row-key="campusId"
       >
         <el-table-column label="区域ID" prop="campusId"></el-table-column>

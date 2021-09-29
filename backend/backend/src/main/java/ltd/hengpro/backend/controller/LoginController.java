@@ -21,7 +21,7 @@ import javax.servlet.http.HttpServletResponse;
 
 @RestController
 @CrossOrigin
-public class UserAuthController {
+public class LoginController {
     @Autowired
     UserLoginService userLoginService;
 

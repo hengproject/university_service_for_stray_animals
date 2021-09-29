@@ -6,5 +6,8 @@ public interface WebSiteStatisticsService {
     Long getUserNum();
     SiteStatisticsVo getCountInfo();
     void increaseUserNum();
+    void increaseCatNum();
     void decreaseUserNum();
+    Long getCatNum();
+    void decreaseCatNum();
 }

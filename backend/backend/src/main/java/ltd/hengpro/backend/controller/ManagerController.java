@@ -3,28 +3,37 @@ package ltd.hengpro.backend.controller;
 import com.alibaba.fastjson.JSON;
 import ltd.hengpro.backend.dto.UserDto;
 import ltd.hengpro.backend.entity.Campus;
+import ltd.hengpro.backend.entity.CatInfo;
 import ltd.hengpro.backend.entity.StaffInfo;
 import ltd.hengpro.backend.enums.StaffIdentityEnum;
 import ltd.hengpro.backend.enums.UserGroupEnum;
 import ltd.hengpro.backend.exception.UserAuthException;
 import ltd.hengpro.backend.form.manager.AddAreaForm;
+import ltd.hengpro.backend.form.manager.EditCatForm;
+import ltd.hengpro.backend.service.CatService;
 import ltd.hengpro.backend.service.ManagerService;
 import ltd.hengpro.backend.service.StaffInfoService;
 import ltd.hengpro.backend.service.TokenService;
 import ltd.hengpro.backend.utils.RequestUtil;
+import ltd.hengpro.backend.utils.UUIDUtil;
 import ltd.hengpro.backend.vo.ResultVo;
 import ltd.hengpro.backend.vo.manager.BasicInfoVo;
 import ltd.hengpro.backend.vo.manager.CampusVo;
 import ltd.hengpro.backend.vo.normaluser.UserInfoEditVo;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -38,6 +47,9 @@ public class ManagerController {
 
     @Autowired
     StaffInfoService staffInfoService;
+
+    @Autowired
+    CatService catService;
 
     @PostMapping("/manager_get_basic_info_list")
     public String getBasicInfoList(HttpServletRequest httpServletRequest){
@@ -111,6 +123,57 @@ public class ManagerController {
         managerService.editArea(campusVo);
         return JSON.toJSONString(new ResultVo<>(200,"success",null));
     }
+
+
+    @PostMapping("/manager_upload_file")
+    public String recieveFile(HttpServletRequest httpServletRequest, @Param("catId") String catId) throws IOException {
+        String authorization = authorization(httpServletRequest);
+        if (!ObjectUtils.isEmpty(authorization)) return authorization;
+        // 转换为 MultipartHttpServletRequest
+
+        if (httpServletRequest instanceof MultipartHttpServletRequest) {
+            MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) httpServletRequest;
+            catService.saveCatPhoto(multipartRequest,catId);
+            return JSON.toJSONString(new ResultVo<>(200,"success",null));
+        } else {
+            return JSON.toJSONString(new ResultVo<Object>(401,"传输错误",null));
+        }
+    }
+    @PostMapping("/manager_modify_cat_info")
+    public String modifyCatInfo(HttpServletRequest httpServletRequest) throws IOException {
+        String authorization = authorization(httpServletRequest);
+        if (!ObjectUtils.isEmpty(authorization)) return authorization;
+        String requestData = RequestUtil.getRequestData(httpServletRequest);
+        EditCatForm editCatForm = JSON.parseObject(requestData, EditCatForm.class);
+        catService.modifyCatInfo(editCatForm);
+        return JSON.toJSONString(new ResultVo<>(200,"success",null));
+    }
+
+    @PostMapping("/manager_add_cat_info")
+    public String addCatInfo(HttpServletRequest httpServletRequest) throws IOException {
+        String authorization = authorization(httpServletRequest);
+        if (!ObjectUtils.isEmpty(authorization)) return authorization;
+        String requestData = RequestUtil.getRequestData(httpServletRequest);
+        EditCatForm editCatForm = JSON.parseObject(requestData, EditCatForm.class);
+        CatInfo catInfo = new CatInfo();
+        editCatForm.setCatId(UUIDUtil.getUUID());
+        BeanUtils.copyProperties(editCatForm,catInfo);
+        catInfo.setCatPhotoId("0");
+        catInfo.setUpdateTime(new Date());
+        catInfo.setCreateTime(new Date());
+        catInfo.setLastFindTime(new Date());
+        catService.addCatInfo(catInfo);
+        return JSON.toJSONString(new ResultVo<>(200,"success",null));
+    }
+    @PostMapping("/manager_delete_cat_info")
+    public String deleteCatInfo(HttpServletRequest httpServletRequest) throws IOException {
+        String authorization = authorization(httpServletRequest);
+        if (!ObjectUtils.isEmpty(authorization)) return authorization;
+        String catId = RequestUtil.getRequestData(httpServletRequest);
+        catService.delete(catId);
+        return JSON.toJSONString(new ResultVo<>(200,"success",null));
+    }
+
     private String authorization(HttpServletRequest httpServletRequest) {
         String authorization = httpServletRequest.getHeader("Authorization");
 
@@ -124,4 +187,18 @@ public class ManagerController {
         }
         return null;
     }
+
+    private UserDto getUserDto(HttpServletRequest httpServletRequest){
+
+        String authorization = httpServletRequest.getHeader("Authorization");
+        UserDto userDto;
+        try {
+            userDto = tokenService.getUserDtoFromUUID(authorization);
+        }catch (UserAuthException e){
+            return null;
+        }
+
+        return userDto;
+    }
+
 }

@@ -17,6 +17,17 @@ public class WebSiteStatisticsServiceImpl implements WebSiteStatisticsService {
     public Long getUserNum() {
         return siteStatisticsDao.findById(1).get().getUserNum();
     }
+    public Long getCatNum() {
+        return siteStatisticsDao.findById(1).get().getCatNum();
+    }
+
+    @Override
+    public void decreaseCatNum() {
+        SiteStatistics byId = siteStatisticsDao.getById(1);
+        long l = byId.getCatNum() - 1;
+        byId.setCatNum(l);
+        siteStatisticsDao.saveAndFlush(byId);
+    }
 
     @Override
     public SiteStatisticsVo getCountInfo() {
@@ -32,6 +43,13 @@ public class WebSiteStatisticsServiceImpl implements WebSiteStatisticsService {
         byId.setUserNum(l);
         siteStatisticsDao.saveAndFlush(byId);
     }
+    @Override
+    public void increaseCatNum() {
+        SiteStatistics byId = siteStatisticsDao.getById(1);
+        long l = byId.getCatNum() + 1;
+        byId.setCatNum(l);
+        siteStatisticsDao.saveAndFlush(byId);
+    }
 
     @Override
     public void decreaseUserNum() {
@@ -40,5 +58,7 @@ public class WebSiteStatisticsServiceImpl implements WebSiteStatisticsService {
         byId.setUserNum(l);
         siteStatisticsDao.saveAndFlush(byId);
     }
+
+
 
 }

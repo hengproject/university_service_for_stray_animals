@@ -7,7 +7,6 @@ public class FileIO extends ServerIO{
         File ioFile = getIOFile(address);
         return new FileInputStream(ioFile);
 
-
     }
     public <T extends InputStream> void storeAFile(String filename,T inputStream){
         storeAFile(filename,inputStream,2048);
@@ -37,4 +36,25 @@ public class FileIO extends ServerIO{
         }
     }
 
+    public InputStream inputAFile(String filename){
+        File ioFile = getIOFile(filename);
+        FileInputStream fileInputStream = null;
+        try {
+            fileInputStream = new FileInputStream(ioFile);
+        }catch (FileNotFoundException e){
+            e.printStackTrace();
+        }finally {
+            try {
+                fileInputStream.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return fileInputStream;
+    }
+
+    public void delete(String filename){
+         File ioFile = getIOFile(filename);
+         ioFile.delete();
+    }
 }

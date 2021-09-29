@@ -52,11 +52,12 @@ let normalMenuList = [
   new MenuList("待审批流程", "00104", "/processList", null),
   new MenuList("报表查看", "00105", "/echarts", null),
   new MenuList("猫猫档案查看", "00106", "/catDocuments", null),
+  new MenuList("Test", "00107", "/test", null),
 ];
 
 let ManageMenuList = [
   new MenuList("审批", "00201", "/approval", null),
-  new MenuList("修改猫猫档案", "000202", "/modifyDocument", null),
+  new MenuList("猫猫档案", "000202", "/catInfo", null),
   new MenuList("修改基础信息", "000203", "/modifyBasicInformation", null),
 ];
 

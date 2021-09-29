@@ -7,6 +7,8 @@ import Users from "@/components/superUser/Users";
 import EditInformation from "@/components/normalUser/EditInformation";
 import CatDocuments from "@/components/normalUser/CatDocuments";
 import ModifyBasicInformation from "@/components/manager/ModifyBasicInformation";
+import Test from "@/components/Test";
+import CatInfo from "@/components/manager/CatInfo";
 
 Vue.use(VueRouter);
 
@@ -23,6 +25,8 @@ const routes = [
       { path: "/editInformation", component: EditInformation },
       { path: "/catDocuments", component: CatDocuments },
       { path: "/modifyBasicInformation", component: ModifyBasicInformation },
+      { path: "/test", component: Test },
+      { path: "/catInfo", component: CatInfo },
     ],
   },
 ];

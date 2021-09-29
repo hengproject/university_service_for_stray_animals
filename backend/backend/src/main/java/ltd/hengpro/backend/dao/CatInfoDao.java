@@ -1,4 +1,11 @@
 package ltd.hengpro.backend.dao;
 
-public interface CatInfoDao extends org.springframework.data.jpa.repository.JpaRepository<ltd.hengpro.backend.entity.CatInfo, java.lang.String> {
+import ltd.hengpro.backend.entity.CatInfo;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface CatInfoDao extends JpaRepository<CatInfo, String> {
+    @Override
+    Page<CatInfo> findAll(Pageable pageable);
 }

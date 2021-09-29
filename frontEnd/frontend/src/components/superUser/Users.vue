@@ -215,6 +215,8 @@
 </template>
 
 <script>
+import respFilter from "@/components/utils/respFilter";
+
 export default {
   data() {
     return {
@@ -289,9 +291,10 @@ export default {
         "/superuser_getUserList",
         this.queryInfo
       );
-      if (resp.code === 403 || resp.code === 401) {
+      if (!respFilter(resp)) {
         this.$message.error(resp.msg);
         this.logout();
+        return;
       }
       if (resp.code === 200) {
         this.userList = resp.data.u;

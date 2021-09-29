@@ -8,7 +8,8 @@ public enum ExceptionEnum implements CodeMessageEnum<Integer>{
     USERID_TO_STAFF_NOT_FOUND(1,"用户尚未注册在Staff表中"),
     DELETE_INFO_DAO_NOT_FOUND(2,"删除用户时,该表未发现"),
     EDIT_USER_NOT_FOUND(3,"修改用户信息时,该用户不存在"),
-    RE_ADD_EXCEPTION(4,"数据库添加时，该数据已存在");
+    RE_ADD_EXCEPTION(4,"数据库添加时，该数据已存在"),
+    NOT_IMG_EXCEPTION(5,"所请求的不是图片");
 
     private final Integer code;
 
