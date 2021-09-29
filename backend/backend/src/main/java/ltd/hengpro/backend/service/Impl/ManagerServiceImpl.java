@@ -1,11 +1,13 @@
 package ltd.hengpro.backend.service.Impl;
 
+import ltd.hengpro.backend.dao.CatInfoDao;
 import ltd.hengpro.backend.entity.Area;
 import ltd.hengpro.backend.entity.Campus;
 import ltd.hengpro.backend.enums.ExceptionEnum;
 import ltd.hengpro.backend.exception.DaoException;
 import ltd.hengpro.backend.form.manager.AddAreaForm;
 import ltd.hengpro.backend.service.CampusService;
+import ltd.hengpro.backend.service.CatService;
 import ltd.hengpro.backend.service.ManagerService;
 import ltd.hengpro.backend.vo.manager.CampusVo;
 import org.springframework.beans.BeanUtils;
@@ -23,6 +25,9 @@ import java.util.List;
 public class ManagerServiceImpl implements ManagerService {
     @Autowired
     CampusService campusService;
+
+    @Autowired
+    CatInfoDao catInfoDao;
 
     public List<CampusVo> getCampusList(){
         List<CampusVo> campusVoList= new ArrayList<>();
@@ -47,6 +52,8 @@ public class ManagerServiceImpl implements ManagerService {
     }
 
     public void deleteAreaById(Integer areaId){
+        long count = catInfoDao.countByAreaId(areaId);
+        if(count!=0) throw new DaoException(ExceptionEnum.AREA_OR_CAMPUS_DELETE_REFUSE);
         campusService.deleteArea(areaId);
     }
 
@@ -83,6 +90,8 @@ public class ManagerServiceImpl implements ManagerService {
         }
 
         public void deleteCampusByCampusId(Integer campusId){
+            long count = catInfoDao.countByCampusId(campusId);
+            if(count!=0) throw new DaoException(ExceptionEnum.AREA_OR_CAMPUS_DELETE_REFUSE);
             campusService.deleteCampusById(campusId);
         }
 }

@@ -3,6 +3,7 @@ function responseRec(resp) {
   if (resp.code === 403 || resp.code === 401) {
     return false;
   }
+  throw resp.msg;
 }
 
 export default function (resp) {

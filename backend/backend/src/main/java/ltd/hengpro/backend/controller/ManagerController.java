@@ -7,6 +7,7 @@ import ltd.hengpro.backend.entity.CatInfo;
 import ltd.hengpro.backend.entity.StaffInfo;
 import ltd.hengpro.backend.enums.StaffIdentityEnum;
 import ltd.hengpro.backend.enums.UserGroupEnum;
+import ltd.hengpro.backend.exception.DaoException;
 import ltd.hengpro.backend.exception.UserAuthException;
 import ltd.hengpro.backend.form.manager.AddAreaForm;
 import ltd.hengpro.backend.form.manager.EditCatForm;
@@ -76,7 +77,11 @@ public class ManagerController {
         String authorization = authorization(httpServletRequest);
         if (!ObjectUtils.isEmpty(authorization)) return authorization;
         String requestData = RequestUtil.getRequestData(httpServletRequest);
-        managerService.deleteCampusByCampusId(Integer.valueOf(requestData));
+        try{
+            managerService.deleteCampusByCampusId(Integer.valueOf(requestData));
+        }catch (DaoException daoException){
+            return JSON.toJSONString(new ResultVo<>(406,daoException.getMessage(),null));
+        }
         return JSON.toJSONString(new ResultVo<>(200,"success",null));
     }
     @PostMapping("/manager_add_campus_information")
@@ -110,7 +115,11 @@ public class ManagerController {
         if (!ObjectUtils.isEmpty(authorization)) return authorization;
         String requestData = RequestUtil.getRequestData(httpServletRequest);
 
-        managerService.deleteAreaById(Integer.valueOf(requestData));
+        try{
+            managerService.deleteAreaById(Integer.valueOf(requestData));
+        }catch (DaoException daoException){
+            return JSON.toJSONString(new ResultVo<>(406,daoException.getMessage(),null));
+        }
         return JSON.toJSONString(new ResultVo<>(200,"success",null));
     }
 
@@ -163,6 +172,7 @@ public class ManagerController {
         catInfo.setCreateTime(new Date());
         catInfo.setLastFindTime(new Date());
         catService.addCatInfo(catInfo);
+        System.out.println(catInfo);
         return JSON.toJSONString(new ResultVo<>(200,"success",null));
     }
     @PostMapping("/manager_delete_cat_info")

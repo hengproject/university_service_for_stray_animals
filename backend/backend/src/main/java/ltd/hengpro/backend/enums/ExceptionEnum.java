@@ -9,7 +9,8 @@ public enum ExceptionEnum implements CodeMessageEnum<Integer>{
     DELETE_INFO_DAO_NOT_FOUND(2,"删除用户时,该表未发现"),
     EDIT_USER_NOT_FOUND(3,"修改用户信息时,该用户不存在"),
     RE_ADD_EXCEPTION(4,"数据库添加时，该数据已存在"),
-    NOT_IMG_EXCEPTION(5,"所请求的不是图片");
+    NOT_IMG_EXCEPTION(5,"所请求的不是图片"),
+    AREA_OR_CAMPUS_DELETE_REFUSE(6,"拒绝删除区域，因为还有动物在该地区");
 
     private final Integer code;
 

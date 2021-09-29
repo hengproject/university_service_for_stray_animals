@@ -51,6 +51,7 @@ public class CatServiceImpl implements CatService {
             BeanUtils.copyProperties(catInfo,catDto);
             String campusName = campusDao.findById(catInfo.getCampusId()).get().getCampusName();
             catDto.setCampusName(campusName);
+            System.out.println(catInfo);
             String areaName = areaDao.findById(catInfo.getAreaId()).get().getAreaName();
             catDto.setAreaName(areaName);
             catDtos.add(catDto);

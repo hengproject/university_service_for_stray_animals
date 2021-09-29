@@ -264,10 +264,15 @@ export default {
           "/manager_delete_area",
           rowInfo.campusId.split(".")[1]
         );
-        if (!respFilter(resp)) {
-          this.$message.error(resp.msg);
-          this.logout();
-          return;
+        try {
+          if (!respFilter(resp)) {
+            this.$message.error(resp.msg);
+            this.logout();
+            return;
+          }
+        }catch (e){
+          this.$message.error(e);
+          return ;
         }
 
         // let array=this.$refs.campusFormRef.store.states.lazyTreeNodeMap[parseInt(rowInfo.campusId)];
@@ -296,10 +301,14 @@ export default {
         "/manager_delete_campus_information",
         this.deleteCampusDrawerId
       );
-      if (!respFilter(resp)) {
-        this.$message.error(resp.msg);
-        this.logout();
-        return;
+      try {
+        if (!respFilter(resp)) {
+          this.$message.error(resp.msg);
+          this.logout();
+          return;
+        }
+      }catch (e){
+        this.$message.error(e);
       }
       this.$message.success("成功删除");
       this.deleteCampusDrawer = false;
