@@ -47,12 +47,12 @@ class MenuList {
 
 let normalMenuList = [
   new MenuList("喂食记录", "00101", "/feed", null),
-  new MenuList("记录猫猫出现", "00102", "/recordAnimal", null),
+  new MenuList("记录猫猫出现", "00102", "/recordAppearance", null),
   new MenuList("修改账户信息", "00103", "/editInformation", null),
-  new MenuList("待审批流程", "00104", "/processList", null),
-  new MenuList("报表查看", "00105", "/echarts", null),
-  new MenuList("猫猫档案查看", "00106", "/catDocuments", null),
-  new MenuList("Test", "00107", "/test", null),
+  new MenuList("申请流程查看", "00104", "/questions", null),
+  // new MenuList("报表查看", "00105", "/echarts", null),
+  new MenuList("猫猫档案查看", "00106", "/catCard", null),
+  // new MenuList("Test", "00107", "/test", null),
 ];
 
 let ManageMenuList = [

@@ -2,8 +2,8 @@ package ltd.hengpro.backend.controller;
 
 import com.alibaba.fastjson.JSON;
 import ltd.hengpro.backend.dto.UserDto;
-import ltd.hengpro.backend.entity.Campus;
 import ltd.hengpro.backend.entity.CatInfo;
+import ltd.hengpro.backend.entity.Question;
 import ltd.hengpro.backend.entity.StaffInfo;
 import ltd.hengpro.backend.enums.StaffIdentityEnum;
 import ltd.hengpro.backend.enums.UserGroupEnum;
@@ -11,18 +11,17 @@ import ltd.hengpro.backend.exception.DaoException;
 import ltd.hengpro.backend.exception.UserAuthException;
 import ltd.hengpro.backend.form.manager.AddAreaForm;
 import ltd.hengpro.backend.form.manager.EditCatForm;
-import ltd.hengpro.backend.service.CatService;
-import ltd.hengpro.backend.service.ManagerService;
-import ltd.hengpro.backend.service.StaffInfoService;
-import ltd.hengpro.backend.service.TokenService;
+import ltd.hengpro.backend.service.*;
 import ltd.hengpro.backend.utils.RequestUtil;
 import ltd.hengpro.backend.utils.UUIDUtil;
+import ltd.hengpro.backend.vo.PageableVo;
 import ltd.hengpro.backend.vo.ResultVo;
 import ltd.hengpro.backend.vo.manager.BasicInfoVo;
 import ltd.hengpro.backend.vo.manager.CampusVo;
 import ltd.hengpro.backend.vo.normaluser.UserInfoEditVo;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.repository.query.Param;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -51,6 +50,9 @@ public class ManagerController {
 
     @Autowired
     CatService catService;
+
+    @Autowired
+    QuestionService questionService;
 
     @PostMapping("/manager_get_basic_info_list")
     public String getBasicInfoList(HttpServletRequest httpServletRequest){
@@ -183,6 +185,37 @@ public class ManagerController {
         catService.delete(catId);
         return JSON.toJSONString(new ResultVo<>(200,"success",null));
     }
+
+    @PostMapping("/manager_get_question_unresolved_info")
+    public String getQuestionUnResolved(HttpServletRequest httpServletRequest) throws Exception {
+        String authorization = authorization(httpServletRequest);
+        if (!ObjectUtils.isEmpty(authorization)) return authorization;
+        String requestData = RequestUtil.getRequestData(httpServletRequest);
+        PageableVo pageableVo = JSON.parseObject(requestData, PageableVo.class);
+        List<Question> unsolvedQuestion = questionService.getUnsolvedQuestion(PageRequest.of(pageableVo.getPageNum(), pageableVo.getPageSize()));
+
+        return JSON.toJSONString(new ResultVo<>(200,"success",unsolvedQuestion));
+    }
+    @PostMapping("/manager_set_question_seen")
+    public String setQuestionSeen(HttpServletRequest httpServletRequest) throws Exception {
+        String authorization = authorization(httpServletRequest);
+        if (!ObjectUtils.isEmpty(authorization)) return authorization;
+        String questionId = RequestUtil.getRequestData(httpServletRequest);
+        questionService.setQuestionSeen(questionId);
+
+        return JSON.toJSONString(new ResultVo<>(200,"success",null));
+    }
+    @PostMapping("/manager_set_question_resolved")
+    public String setQuestionResolved(HttpServletRequest httpServletRequest) throws Exception {
+        String authorization = authorization(httpServletRequest);
+        UserDto userDto = getUserDto(httpServletRequest);
+        if (!ObjectUtils.isEmpty(authorization)) return authorization;
+        String questionId = RequestUtil.getRequestData(httpServletRequest);
+        questionService.setQuestionSolved(userDto,questionId);
+
+        return JSON.toJSONString(new ResultVo<>(200,"success",null));
+    }
+
 
     private String authorization(HttpServletRequest httpServletRequest) {
         String authorization = httpServletRequest.getHeader("Authorization");

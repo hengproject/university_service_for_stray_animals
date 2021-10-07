@@ -1,10 +1,11 @@
 package ltd.hengpro.backend.controller;
 
 import com.alibaba.fastjson.JSON;
-import ltd.hengpro.backend.dao.FileRecordDao;
+import ltd.hengpro.backend.dto.CatAbbrDto;
 import ltd.hengpro.backend.dto.CatDto;
+import ltd.hengpro.backend.dto.QuestionDto;
 import ltd.hengpro.backend.dto.UserDto;
-import ltd.hengpro.backend.entity.CatInfo;
+import ltd.hengpro.backend.entity.Question;
 import ltd.hengpro.backend.exception.UserAuthException;
 import ltd.hengpro.backend.service.*;
 import ltd.hengpro.backend.utils.RequestUtil;
@@ -14,6 +15,7 @@ import ltd.hengpro.backend.vo.ResultVo;
 import ltd.hengpro.backend.vo.normaluser.UserInfoEditVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.repository.query.Param;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -47,14 +49,16 @@ public class NormalUserController {
     @Autowired
     CatService catService;
 
+    @Autowired
+    QuestionService questionService;
 
-    private UserDto getUserDto(HttpServletRequest httpServletRequest){
+    private UserDto getUserDto(HttpServletRequest httpServletRequest) {
 
         String authorization = httpServletRequest.getHeader("Authorization");
         UserDto userDto;
         try {
             userDto = tokenService.getUserDtoFromUUID(authorization);
-        }catch (UserAuthException e){
+        } catch (UserAuthException e) {
             return null;
         }
 
@@ -114,8 +118,6 @@ public class NormalUserController {
     }
 
 
-
-
     @GetMapping("/image")
     public String recieveFile(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws IOException {
 
@@ -125,7 +127,7 @@ public class NormalUserController {
         ServletOutputStream servletOutputStream = httpServletResponse.getOutputStream();
         byte[] buff = new byte[1024 * 4];
         int bytesRead;
-        while(-1 != (bytesRead = img.read(buff, 0, buff.length))) {
+        while (-1 != (bytesRead = img.read(buff, 0, buff.length))) {
             servletOutputStream.write(buff, 0, bytesRead);
         }
         img.close();
@@ -147,6 +149,64 @@ public class NormalUserController {
         Long catNum = webSiteStatisticsService.getCatNum();
         Combine2Vo<List<CatDto>, Long> listLongCombine2Vo = new Combine2Vo<>(byPage, catNum);
 
-        return JSON.toJSONString(new ResultVo<>(200,"success",listLongCombine2Vo));
+        return JSON.toJSONString(new ResultVo<>(200, "success", listLongCombine2Vo));
     }
+
+    @PostMapping("/get_cat_like_information")
+    public String getCatInfoLike(@Param("catNameLike") String catNameLike) {
+        return null;
+    }
+
+
+    @PostMapping("/get_specific_cat_info")
+    public String getSpecificInfo(@Param("catNameLike") String catNameLike) {
+        return null;
+    }
+
+    @PostMapping("/get_cat_appearance_list")
+    public String getCatAppearanceList(HttpServletRequest httpServletRequest) {
+        UserDto userDto = getUserDto(httpServletRequest);
+        if (ObjectUtils.isEmpty(userDto)) {
+            return JSON.toJSONString(new ResultVo<Object>(401, "认证未通过，请重新登录", null));
+        }
+        List<CatAbbrDto> allAppearance = catService.findAllAppearance();
+        return JSON.toJSONString(new ResultVo<Object>(200, "success", allAppearance));
+    }
+    @PostMapping("/find_cat")
+    public String recordFindCat(HttpServletRequest httpServletRequest) throws IOException {
+        UserDto userDto = getUserDto(httpServletRequest);
+        if (ObjectUtils.isEmpty(userDto)) {
+            return JSON.toJSONString(new ResultVo<Object>(401, "认证未通过，请重新登录", null));
+        }
+        String catId = RequestUtil.getRequestData(httpServletRequest);
+        catService.recordFindCat(catId);
+
+        return JSON.toJSONString(new ResultVo<Object>(200, "success", null));
+    }
+
+    @PostMapping("/question_upload")
+    public String questionRaised(HttpServletRequest httpServletRequest) throws IOException {
+        UserDto userDto = getUserDto(httpServletRequest);
+        if (ObjectUtils.isEmpty(userDto)) {
+            return JSON.toJSONString(new ResultVo<Object>(401, "认证未通过，请重新登录", null));
+        }
+        String requestData = RequestUtil.getRequestData(httpServletRequest);
+        QuestionDto questionDto = JSON.parseObject(requestData, QuestionDto.class);
+        String userId = userDto.getUserId();
+        questionDto.setStarterId(userId);
+        questionService.startQuestion(questionDto);
+        return JSON.toJSONString(new ResultVo<Object>(200, "success", null));
+    }
+
+
+    @PostMapping("/find_question_by_user_id")
+    public String normalUserFindQuestion(HttpServletRequest httpServletRequest) throws IOException {
+        UserDto userDto = getUserDto(httpServletRequest);
+        if (ObjectUtils.isEmpty(userDto)) {
+            return JSON.toJSONString(new ResultVo<Object>(401, "认证未通过，请重新登录", null));
+        }
+        List<Question> questionByStarterId = questionService.getQuestionByStarterId(userDto.getUserId());
+        return JSON.toJSONString(new ResultVo<Object>(200, "success", questionByStarterId));
+    }
+
 }

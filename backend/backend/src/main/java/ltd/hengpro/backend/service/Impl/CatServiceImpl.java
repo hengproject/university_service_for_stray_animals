@@ -3,8 +3,10 @@ package ltd.hengpro.backend.service.Impl;
 import ltd.hengpro.backend.dao.AreaDao;
 import ltd.hengpro.backend.dao.CampusDao;
 import ltd.hengpro.backend.dao.CatInfoDao;
-import ltd.hengpro.backend.dao.FileRecordDao;
+import ltd.hengpro.backend.dto.CatAbbrDto;
 import ltd.hengpro.backend.dto.CatDto;
+import ltd.hengpro.backend.entity.Area;
+import ltd.hengpro.backend.entity.Campus;
 import ltd.hengpro.backend.entity.CatInfo;
 import ltd.hengpro.backend.entity.FileRecord;
 import ltd.hengpro.backend.form.manager.EditCatForm;
@@ -23,7 +25,6 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class CatServiceImpl implements CatService {
@@ -51,7 +52,6 @@ public class CatServiceImpl implements CatService {
             BeanUtils.copyProperties(catInfo,catDto);
             String campusName = campusDao.findById(catInfo.getCampusId()).get().getCampusName();
             catDto.setCampusName(campusName);
-            System.out.println(catInfo);
             String areaName = areaDao.findById(catInfo.getAreaId()).get().getAreaName();
             catDto.setAreaName(areaName);
             catDtos.add(catDto);
@@ -106,5 +106,28 @@ public class CatServiceImpl implements CatService {
         catInfoDao.delete(byId);
         webSiteStatisticsService.decreaseCatNum();
 
+    }
+
+    @Override
+    public List<CatAbbrDto> findAllAppearance() {
+        List<CatInfo> all = catInfoDao.findAll();
+        LinkedList<CatAbbrDto> catAbbrDtos = new LinkedList<>();
+        for(CatInfo catInfo : all){
+            CatAbbrDto catAbbrDto = new CatAbbrDto();
+            Campus campus = campusDao.findById(catInfo.getCampusId()).get();
+            Area area = areaDao.findById(catInfo.getAreaId()).get();
+            BeanUtils.copyProperties(catInfo, catAbbrDto);
+            catAbbrDto.setCampusName(campus.getCampusName());
+            catAbbrDto.setAreaName(area.getAreaName());
+            catAbbrDtos.add(catAbbrDto);
+        }
+        return catAbbrDtos;
+    }
+
+    @Override
+    public void recordFindCat(String catId) {
+        CatInfo catInfo = catInfoDao.findById(catId).get();
+        catInfo.setLastFindTime(new Date());
+        catInfoDao.saveAndFlush(catInfo);
     }
 }
