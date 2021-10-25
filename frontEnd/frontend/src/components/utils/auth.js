@@ -46,7 +46,7 @@ class MenuList {
 }
 
 let normalMenuList = [
-  new MenuList("喂食记录", "00101", "/feed", null),
+  // new MenuList("喂食记录", "00101", "/feed", null),
   new MenuList("记录猫猫出现", "00102", "/recordAppearance", null),
   new MenuList("修改账户信息", "00103", "/editInformation", null),
   new MenuList("申请流程查看", "00104", "/questions", null),

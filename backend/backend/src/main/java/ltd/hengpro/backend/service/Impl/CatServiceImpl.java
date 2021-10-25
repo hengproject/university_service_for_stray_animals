@@ -63,14 +63,14 @@ public class CatServiceImpl implements CatService {
     @Override
     public boolean saveCatPhoto(MultipartHttpServletRequest multipartHttpServletRequest,String catId) throws IOException {
         MultipartFile file = multipartHttpServletRequest.getFile("file");
-        System.out.println("上传的文件名称:" + file.getOriginalFilename());
-        System.out.println("上传的文件大小:" + file.getSize());
-        // 接收其他表单参数
-        String name = multipartHttpServletRequest.getParameter("name");
-        String content = multipartHttpServletRequest.getParameter("content");
-        System.out.println("name:" + name);
-        System.out.println("content:" + content);
-
+//        System.out.println("上传的文件名称:" + file.getOriginalFilename());
+//        System.out.println("上传的文件大小:" + file.getSize());
+//        // 接收其他表单参数
+//        String name = multipartHttpServletRequest.getParameter("name");
+//        String content = multipartHttpServletRequest.getParameter("content");
+//        System.out.println("name:" + name);
+//        System.out.println("content:" + content);
+        System.out.println(catId);
         CatInfo catInfo = catInfoDao.findById(catId).get();
         if (!ObjectUtils.isEmpty(catInfo.getCatPhotoId())) {
             ioService.deleteFile(catInfo.getCatPhotoId());

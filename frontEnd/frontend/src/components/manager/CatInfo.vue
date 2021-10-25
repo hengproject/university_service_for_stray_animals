@@ -212,7 +212,7 @@
             ref="uploadCatPictureRef"
             :action="pictureUploadAddr"
             :auto-upload="false"
-            :data="{ catId: editForm.catId }"
+            :data="{ catId: this.temp.catId4Img}"
             :on-change="onChange"
             :show-file-list="false"
           >
@@ -334,6 +334,9 @@ export default {
         areaId: -1,
       },
       addCatDialogVisible: false,
+      temp:{
+        catId4Img: null,
+      }
     };
   },
   created() {
@@ -458,32 +461,41 @@ export default {
       if (!this.editForm.areaId)
         this.editForm.areaId = this.editForm.areaIdTemp;
       copyProperties(this.editForm, this.uploadEditForm);
-      this.uploadEditForm.areaId=null;
+      // this.uploadEditForm.areaId = null;
       let { data: respForm } = await this.$http.post(
         "/manager_add_cat_info",
         this.uploadEditForm
       );
+
+      this.temp.catId4Img = respForm.data;
+      this.$set(this.temp, "catId4Img", respForm.data);
       if (!respFilter(respForm)) {
         this.$message.error(respForm.msg);
         this.logout();
         return;
       }
-      this.$refs.uploadCatPictureRef.submit();
-      this.$message.success("修改成功");
+      this.$nextTick(() => {
+        console.log(this.temp.catId4Img);
+        this.$refs.uploadCatPictureRef.submit();
+      });
+      this.$message.success("添加成功");
       this.addCatDialogVisible = false;
-      this.getCatList();
+      await this.getCatList();
     },
     async deleteCat(row){
-      let { data: resp } = await this.$http.post("/manager_delete_cat_info",row.catId);
+      let { data: resp } = await this.$http.post(
+        "/manager_delete_cat_info",
+        row.catId
+      );
       if (!respFilter(resp)) {
         this.$message.error(resp.msg);
         this.logout();
         return;
       }
       this.$message.success("删除成功");
-      this.getCatList();
-    }
-  },
+      await this.getCatList();
+    },
+  }
 };
 </script>
 

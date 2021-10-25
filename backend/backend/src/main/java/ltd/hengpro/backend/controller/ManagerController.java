@@ -137,11 +137,14 @@ public class ManagerController {
 
 
     @PostMapping("/manager_upload_file")
-    public String recieveFile(HttpServletRequest httpServletRequest, @Param("catId") String catId) throws IOException {
-        String authorization = authorization(httpServletRequest);
-        if (!ObjectUtils.isEmpty(authorization)) return authorization;
-        // 转换为 MultipartHttpServletRequest
+    public String receiveFile(HttpServletRequest httpServletRequest, @Param("catId") String catId) throws IOException {
+//        String authorization = authorization(httpServletRequest);
+        // todo: 前端无法提供验证身份，暂时不验证
+//        if (!ObjectUtils.isEmpty(authorization)) return authorization;
 
+
+        // 转换为 MultipartHttpServletRequest
+        System.out.println(catId);
         if (httpServletRequest instanceof MultipartHttpServletRequest) {
             MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) httpServletRequest;
             catService.saveCatPhoto(multipartRequest,catId);
@@ -174,8 +177,7 @@ public class ManagerController {
         catInfo.setCreateTime(new Date());
         catInfo.setLastFindTime(new Date());
         catService.addCatInfo(catInfo);
-        System.out.println(catInfo);
-        return JSON.toJSONString(new ResultVo<>(200,"success",null));
+        return JSON.toJSONString(new ResultVo<>(200,"success",catInfo.getCatId()));
     }
     @PostMapping("/manager_delete_cat_info")
     public String deleteCatInfo(HttpServletRequest httpServletRequest) throws IOException {
