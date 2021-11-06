@@ -20,5 +20,7 @@ public interface UserLoginService {
     void edit(UserLogin userLogin);
 
     UserLogin findUserByUserId(String id);
+
+    boolean registerNormalUser(UserLoginVo userLoginVo);
 }
 

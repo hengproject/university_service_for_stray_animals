@@ -104,7 +104,6 @@ public class SuperUserServiceImpl implements SuperUserService {
         staffInfoService.register(staffInfo);
         UserIdentity userIdentity = new UserIdentity(userId, UserGroupEnum.valueOf(addUserForm.getUserGroup()).getCode(), 0, staffId);
         userIdentityService.register(userIdentity);
-
         webSiteStatisticsService.increaseUserNum();
     }
 

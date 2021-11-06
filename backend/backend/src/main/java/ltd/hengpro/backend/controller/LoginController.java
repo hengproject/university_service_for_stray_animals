@@ -13,11 +13,13 @@ import ltd.hengpro.backend.vo.ResultVo;
 import ltd.hengpro.backend.vo.UserLoginVo;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 @RestController
 @CrossOrigin
@@ -63,6 +65,20 @@ public class LoginController {
         BeanUtils.copyProperties(userDto,authDto);
         BeanUtils.copyProperties(staffDto,authDto);
         ResultVo<AuthDto> resultVo = new ResultVo<>(200, "success", authDto);
+        return JSON.toJSONString(resultVo);
+    }
+
+    @PostMapping("/register_normal_user")
+    public String registerNormalUser(HttpServletRequest httpServletRequest) throws IOException {
+        String jsonString = RequestUtil.getRequestData(httpServletRequest);
+        UserLoginVo userLoginVo = JSON.parseObject(jsonString, UserLoginVo.class);
+        boolean b = userLoginService.registerNormalUser(userLoginVo);
+        ResultVo<AuthDto> resultVo;
+        if(b){
+            resultVo = new ResultVo<>(200, "success", null);
+        }else {
+            resultVo = new ResultVo<>(403, "用户名重复了", null);
+        }
         return JSON.toJSONString(resultVo);
     }
 }

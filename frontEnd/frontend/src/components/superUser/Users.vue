@@ -45,8 +45,11 @@
           ></el-table-column>
           <el-table-column
             label="用户组"
-            prop="userDto.userGroupEnum"
-          ></el-table-column>
+          >
+            <template slot-scope="scope">
+              {{ scope.row.userDto.userGroupEnum =='SUPER_USER'? '超级用户':scope.row.staffDto.staffIdentityEnum == 'MANAGER' ?'管理员':'普通用户'}}
+            </template>
+          </el-table-column>
         </el-table-column>
 
         <el-table-column label="操作员管理" align="center">
@@ -57,10 +60,6 @@
           <el-table-column
             label="操作员姓名"
             prop="staffDto.staffName"
-          ></el-table-column>
-          <el-table-column
-            label="操作员类别"
-            prop="staffDto.staffIdentityEnum"
           ></el-table-column>
         </el-table-column>
         <el-table-column label="具体操作" align="center">
@@ -144,8 +143,9 @@
           ></el-input>
         </el-form-item>
         <el-form-item label="用户组" prop="userGroup">
-          <el-select v-model="addForm.userGroup">
+          <el-select v-model="tmp.addForm.userGroup">
             <el-option label="普通用户" value="NORMAL_USER"></el-option>
+            <el-option label="管理员" value="MANAGER"></el-option>
             <el-option label="超级用户" value="SUPER_USER"></el-option>
           </el-select>
         </el-form-item>
@@ -154,12 +154,6 @@
             v-model="addForm.staffName"
             placeholder="请输入操作员姓名"
           ></el-input>
-        </el-form-item>
-        <el-form-item label="操作员类别" prop="userGroup">
-          <el-select v-model="addForm.staffIdentity">
-            <el-option label="普通用户" value="NORMAL_USER"></el-option>
-            <el-option label="管理员" value="MANAGER"></el-option>
-          </el-select>
         </el-form-item>
       </el-form>
 
@@ -187,8 +181,9 @@
           ></el-input>
         </el-form-item>
         <el-form-item label="用户组" prop="userGroup">
-          <el-select v-model="editForm.userGroup">
+          <el-select v-model="tmp.editForm.userGroup">
             <el-option label="普通用户" value="NORMAL_USER"></el-option>
+            <el-option label="管理员" value="MANAGER"></el-option>
             <el-option label="超级用户" value="SUPER_USER"></el-option>
           </el-select>
         </el-form-item>
@@ -197,12 +192,6 @@
             v-model="editForm.staffName"
             placeholder="请输入操作员姓名"
           ></el-input>
-        </el-form-item>
-        <el-form-item label="操作员类别" prop="userGroup">
-          <el-select v-model="editForm.staffIdentity">
-            <el-option label="普通用户" value="NORMAL_USER"></el-option>
-            <el-option label="管理员" value="MANAGER"></el-option>
-          </el-select>
         </el-form-item>
       </el-form>
 
@@ -220,6 +209,14 @@ import respFilter from "@/components/utils/respFilter";
 export default {
   data() {
     return {
+      tmp:{
+        editForm:{
+          userGroup: undefined,
+        },
+        addForm:{
+          userGroup:undefined,
+        },
+      },
       //  获取客户列表参数对象
       queryInfo: {
         query: "",
@@ -234,9 +231,9 @@ export default {
       addForm: {
         username: "",
         password: "",
-        userGroup: "",
+        userGroup: "NORMAL_USER",
         staffName: "",
-        staffIdentity: "",
+        staffIdentity: "NORMAL_USER",
       },
       addFormRules: {
         username: [
@@ -333,6 +330,8 @@ export default {
       this.addDialogVisible = false;
     },
     async addFormSubmit() {
+      if(this.tmp.addForm.userGroup == 'SUPER_USER') this.addForm.userGroup = 'SUPER_USER';
+      if(this.tmp.addForm.userGroup == 'MANAGER') this.addForm.staffIdentity = 'MANAGER';
       const { data: resp } = await this.$http.post(
         "/superuser_add_user",
         this.addForm
@@ -357,9 +356,9 @@ export default {
       this.addForm = {
         username: "",
         password: "",
-        userGroup: "",
+        userGroup: "NORMAL_USER",
         staffName: "",
-        staffIdentity: "",
+        staffIdentity: "NORMAL_USER",
       };
     },
     async deleteUser(rowInfo) {
@@ -389,8 +388,11 @@ export default {
         staffName: rowInfo.staffDto.staffName,
         staffIdentity: rowInfo.staffDto.staffIdentityEnum,
       };
+      this.tmp.editForm.userGroup=(this.editForm.userGroup == 'SUPER_USER'?'SUPER_USER': this.editForm.staffIdentity == 'MANAGER'?'MANAGER':'NORMAL_USER' )
     },
     async editUserSubmit() {
+      if(this.tmp.editForm.userGroup == 'SUPER_USER') this.editForm.userGroup = 'SUPER_USER';
+      if(this.tmp.editForm.userGroup == 'MANAGER') this.editForm.staffIdentity = 'MANAGER';
       const { data: resp } = await this.$http.post(
         "/superuser_modify_user",
         this.editForm

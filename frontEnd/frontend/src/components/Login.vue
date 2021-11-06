@@ -34,15 +34,46 @@
           <!-- 按钮区域 -->
           <el-form-item class="btns">
             <el-button type="primary" @click="login">登录</el-button>
+            <el-button type="info" @click="visibility.registerDialog = true"
+              >注册</el-button
+            >
             <el-button type="info" @click="resetLoginForm">重置</el-button>
           </el-form-item>
         </el-form>
       </div>
     </div>
+    <el-dialog
+      title="添加用户"
+      :visible.sync="visibility.registerDialog"
+      width="70%"
+    >
+      <el-form
+        :model="registerForm"
+        :rules="registerFormRules"
+        ref="registerFormRef"
+      >
+        <el-form-item label="用户名" prop="userName">
+          <el-input
+            v-model="registerForm.userName"
+            placeholder="请输入用户名"
+          ></el-input>
+        </el-form-item>
+        <el-form-item label="密码" prop="passwd">
+          <el-input
+            v-model="registerForm.password"
+            placeholder="请输入密码"
+            show-password
+          ></el-input>
+        </el-form-item>
+        <el-button type="primary" @click="registerFormSubmit">注册</el-button>
+      </el-form>
+    </el-dialog>
   </div>
 </template>
 
 <script>
+import respFilter from "@/components/utils/respFilter";
+
 export default {
   data() {
     return {
@@ -61,6 +92,27 @@ export default {
           { min: 6, max: 30, message: "长度在6-30之间", trigger: "blur" },
         ],
       },
+      visibility: {
+        registerDialog: false,
+      },
+      registerForm: {
+        userName: "",
+        passwd: "",
+      },
+      registerFormRules: {
+        userName: [
+          { required: true, message: "请输入用户名", trigger: "blur" },
+        ],
+        password: [
+          { required: true, message: "请输入密码", trigger: "blur" },
+          { min: 6, max: 30, message: "长度在6-30之间", trigger: "blur" },
+          {
+            pattern: "(?=.*[0-9])(?=.*[a-zA-Z]).{8,30}",
+            message: "密码需要包含数字、字母",
+            trigger: "blur",
+          },
+        ],
+      },
     };
   },
   methods: {
@@ -76,6 +128,18 @@ export default {
         window.sessionStorage.setItem("token", resp.data.token);
         this.$router.push("/home");
       });
+    },
+    async registerFormSubmit() {
+      let { data: resp } = await this.$http.post(
+        "/register_normal_user",
+        this.registerForm
+      );
+      if (!respFilter(resp)) {
+        this.$message.error(resp.msg);
+      } else {
+        this.$message.success("注册成功");
+        this.visibility.registerDialog = false;
+      }
     },
   },
 };

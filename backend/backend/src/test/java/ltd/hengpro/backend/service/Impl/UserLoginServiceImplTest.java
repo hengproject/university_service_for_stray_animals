@@ -44,4 +44,12 @@ class UserLoginServiceImplTest {
     void delete(){
         userLoginService.deleteUserLoginById("5");
     }
+
+    @Test
+    @Transactional
+    void registerNormalUser(){
+        UserLoginVo userLoginVo = new UserLoginVo("test_normal_user", "20010829asdaw31");
+        boolean b = userLoginService.registerNormalUser(userLoginVo);
+        System.out.println(b);
+    }
 }

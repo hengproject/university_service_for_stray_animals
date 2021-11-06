@@ -3,13 +3,17 @@ package ltd.hengpro.backend.service.Impl;
 import ltd.hengpro.backend.dao.UserIdentityDao;
 import ltd.hengpro.backend.dao.UserLoginDao;
 import ltd.hengpro.backend.dto.UserDto;
+import ltd.hengpro.backend.entity.StaffInfo;
 import ltd.hengpro.backend.entity.UserIdentity;
 import ltd.hengpro.backend.entity.UserLogin;
 import ltd.hengpro.backend.enums.ExceptionEnum;
 import ltd.hengpro.backend.enums.SpecialIdentityEnum;
+import ltd.hengpro.backend.enums.StaffIdentityEnum;
 import ltd.hengpro.backend.enums.UserGroupEnum;
 import ltd.hengpro.backend.exception.UserAuthException;
 import ltd.hengpro.backend.form.superuser.EditUserForm;
+import ltd.hengpro.backend.service.StaffInfoService;
+import ltd.hengpro.backend.service.UserIdentityService;
 import ltd.hengpro.backend.service.UserLoginService;
 import ltd.hengpro.backend.utils.EnumUtil;
 import ltd.hengpro.backend.utils.UUIDUtil;
@@ -19,6 +23,8 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
+import java.util.Date;
+
 @Service
 public class UserLoginServiceImpl implements UserLoginService {
     @Autowired
@@ -26,6 +32,18 @@ public class UserLoginServiceImpl implements UserLoginService {
 
     @Autowired
     UserLoginDao userLoginDao;
+
+    @Autowired
+    UserLoginService userLoginService;
+
+    @Autowired
+    StaffInfoService staffInfoService;
+
+    @Autowired
+    UserIdentityService userIdentityService;
+
+    @Autowired
+    WebSiteStatisticsServiceImpl webSiteStatisticsService;
 
     @Override
     public UserDto login(UserLoginVo userLoginVo) throws Exception {
@@ -40,6 +58,7 @@ public class UserLoginServiceImpl implements UserLoginService {
         String uuid = UUIDUtil.getUUID();
         UserLogin userLogin = new UserLogin(uuid, userLoginVo.getUsername(), userLoginVo.getPassword());
         userLoginDao.saveAndFlush(userLogin);
+
 
         return uuid;
     }
@@ -75,5 +94,17 @@ public class UserLoginServiceImpl implements UserLoginService {
 
     public UserLogin findUserByUserId(String id){
         return userLoginDao.findUserLoginByUserId(id);
+    }
+
+    public boolean registerNormalUser(UserLoginVo userLoginVo){
+        if(!ObjectUtils.isEmpty(userLoginDao.findUserLoginByUsername(userLoginVo.getUsername()))) return false;
+        String userId = userLoginService.register(userLoginVo);
+        String staffId=UUIDUtil.getUUID();
+        StaffInfo staffInfo = new StaffInfo(staffId, "0", "20", new Date(), new Date(),1, "", userId, "default");
+        staffInfoService.register(staffInfo);
+        UserIdentity userIdentity = new UserIdentity(userId, 1, 0, staffId);
+        userIdentityService.register(userIdentity);
+        webSiteStatisticsService.increaseUserNum();
+        return true;
     }
 }
